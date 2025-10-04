@@ -34,10 +34,7 @@ export function AbilityProvider({
     return defineAbilityFor(permissions);
   }, [session?.user?.permissions]);
 
-  const canEditUsers = useMemo(
-    () => ability.can("update", "User"),
-    [ability],
-  );
+  const canEditUsers = useMemo(() => ability.can("update", "User"), [ability]);
 
   const rolesContextValue = useMemo(
     () => ({

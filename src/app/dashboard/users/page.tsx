@@ -11,6 +11,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Suspense } from "react";
+import { PageLoader } from "@/components/page-loader";
+
+async function UsersTableWrapper({ tenantId }: { tenantId: number }) {
+  const usersResult = await getUsersByTenant(tenantId);
+  const users = usersResult.success ? usersResult.users || [] : [];
+  return <UsersTable users={users} />;
+}
 
 export default async function UsersPage() {
   const session = await auth();
@@ -21,8 +29,6 @@ export default async function UsersPage() {
   }
 
   const tenantId = Number.parseInt(session?.user?.tenantId || "0");
-  const usersResult = await getUsersByTenant(tenantId);
-  const users = usersResult.success ? usersResult.users || [] : [];
   const canCreateUser = ability.can("create", "User");
 
   return (
@@ -45,7 +51,9 @@ export default async function UsersPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <UsersTable users={users} />
+          <Suspense fallback={<PageLoader />}>
+            <UsersTableWrapper tenantId={tenantId} />
+          </Suspense>
         </CardContent>
       </Card>
     </div>
