@@ -14,7 +14,6 @@ import {
   DragEndEvent,
 } from "@dnd-kit/core";
 import {
-  arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   useSortable,
@@ -105,12 +104,6 @@ export function TabNavigation() {
   const router = useRouter();
   const { tabs, removeTab, clearOtherTabs, reorderTabs } = useTabs();
 
-  // Fixed Plan and Optimise tab
-  const fixedTab = {
-    path: "/dashboard/plan-optimise",
-    name: "Plan and Optimise",
-  };
-
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -160,24 +153,6 @@ export function TabNavigation() {
   return (
     <>
       <div className="flex items-center gap-1 overflow-x-auto flex-1">
-        {/* Fixed Plan and Optimise Tab */}
-        <div
-          className={`
-            flex items-center gap-1 px-3 py-2
-            border-r border-l border-t rounded-t-lg min-w-[160px]
-            transition-colors relative cursor-pointer
-            ${
-              pathname === fixedTab.path
-                ? "bg-background border-border"
-                : "bg-muted/50 border-transparent hover:bg-muted"
-            }
-          `}
-          style={{ marginBottom: pathname === fixedTab.path ? "-1px" : "0" }}
-          onClick={() => switchTab(fixedTab.path)}
-        >
-          <span className="text-sm font-medium">{fixedTab.name}</span>
-        </div>
-
         {/* Draggable Tabs */}
         <DndContext
           sensors={sensors}

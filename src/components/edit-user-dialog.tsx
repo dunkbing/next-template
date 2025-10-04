@@ -24,22 +24,22 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { updateUserRole, updateUserPermissions } from "@/app/actions/users";
 import { getAvailablePermissions } from "@/app/actions/roles";
 import { useEffect } from "react";
-import { SelectRole, UserWithRole } from "@/db/schema";
+import { UserWithRole } from "@/db/schema";
+import { useRoles } from "@/lib/casl/context";
 
 interface EditUserDialogProps {
   user: UserWithRole;
-  roles: SelectRole[];
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
 export function EditUserDialog({
   user,
-  roles,
   open,
   onOpenChange,
 }: EditUserDialogProps) {
   const router = useRouter();
+  const { roles } = useRoles();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [selectedRoleId, setSelectedRoleId] = useState(user.roleId.toString());

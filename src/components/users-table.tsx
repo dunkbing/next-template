@@ -34,33 +34,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-
-interface Role {
-  id: number;
-  name: string;
-  permissions: string[];
-}
-
-interface User {
-  id: number;
-  name: string | null;
-  email: string;
-  createdAt: Date;
-  roleId: number;
-  customPermissions: string[];
-  role: {
-    id: number;
-    name: string;
-    permissions: string[];
-  } | null;
-}
+import type { UserWithRole } from "@/db/schema";
 
 interface UsersTableProps {
-  users: User[];
-  roles: Role[];
+  users: UserWithRole[];
 }
 
-export function UsersTable({ users, roles }: UsersTableProps) {
+export function UsersTable({ users }: UsersTableProps) {
   const router = useRouter();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -169,7 +149,6 @@ export function UsersTable({ users, roles }: UsersTableProps) {
       {selectedUser && (
         <EditUserDialog
           user={selectedUser}
-          roles={roles}
           open={editDialogOpen}
           onOpenChange={setEditDialogOpen}
         />

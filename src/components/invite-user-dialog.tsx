@@ -23,18 +23,14 @@ import {
 } from "@/components/ui/select";
 import { UserPlus } from "lucide-react";
 import { createUser } from "@/app/actions/users";
-
-interface Role {
-  id: number;
-  name: string;
-}
+import { useRoles } from "@/lib/casl/context";
 
 interface InviteUserDialogProps {
   tenantId: number;
-  roles: Role[];
 }
 
-export function InviteUserDialog({ tenantId, roles }: InviteUserDialogProps) {
+export function InviteUserDialog({ tenantId }: InviteUserDialogProps) {
+  const { roles } = useRoles();
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -68,7 +64,7 @@ export function InviteUserDialog({ tenantId, roles }: InviteUserDialogProps) {
       setOpen(false);
       router.refresh();
     } catch (err) {
-      setError("Failed to invite user. Please try again.");
+      setError("Failed to create user. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -79,12 +75,12 @@ export function InviteUserDialog({ tenantId, roles }: InviteUserDialogProps) {
       <DialogTrigger asChild>
         <Button>
           <UserPlus className="w-4 h-4 mr-2" />
-          Invite User
+          Create User
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Invite User</DialogTitle>
+          <DialogTitle>Create User</DialogTitle>
           <DialogDescription>
             Add a new user to your organization. They will receive login
             credentials.
@@ -143,7 +139,7 @@ export function InviteUserDialog({ tenantId, roles }: InviteUserDialogProps) {
               Cancel
             </Button>
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Inviting..." : "Invite User"}
+              {isLoading ? "Inviting..." : "Create User"}
             </Button>
           </DialogFooter>
         </form>

@@ -2,7 +2,6 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { defineAbilityFor } from "@/lib/casl/ability";
 import { getUsersByTenant } from "@/app/actions/users";
-import { getRolesByTenant } from "@/app/actions/roles";
 import { UsersTable } from "@/components/users-table";
 import { InviteUserDialog } from "@/components/invite-user-dialog";
 import {
@@ -23,10 +22,7 @@ export default async function UsersPage() {
 
   const tenantId = Number.parseInt(session?.user?.tenantId || "0");
   const usersResult = await getUsersByTenant(tenantId);
-  const rolesResult = await getRolesByTenant(tenantId);
-
   const users = usersResult.success ? usersResult.users || [] : [];
-  const roles = rolesResult.success ? rolesResult.roles || [] : [];
   const canCreateUser = ability.can("create", "User");
 
   return (
@@ -38,9 +34,7 @@ export default async function UsersPage() {
             Manage users in your organization
           </p>
         </div>
-        {canCreateUser && (
-          <InviteUserDialog tenantId={tenantId} roles={roles} />
-        )}
+        {canCreateUser && <InviteUserDialog tenantId={tenantId} />}
       </div>
 
       <Card>
@@ -51,7 +45,7 @@ export default async function UsersPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <UsersTable users={users} roles={roles} />
+          <UsersTable users={users} />
         </CardContent>
       </Card>
     </div>
