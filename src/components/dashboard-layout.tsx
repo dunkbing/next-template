@@ -14,6 +14,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { TabNavigation } from "./tab-navigation";
 import { handleSignOut } from "@/app/actions/auth";
+import type { Locale } from "@/lib/i18n/config";
+import { LanguageSwitcher } from "./language-switcher";
+import { Dictionary } from "@/lib/i18n/get-dictionary";
 
 interface NavItem {
   name: string;
@@ -22,25 +25,33 @@ interface NavItem {
   isHome?: boolean;
 }
 
-const navigation: NavItem[] = [
-  {
-    name: "Dashboard",
-    href: "/dashboard",
-    icon: LayoutDashboard,
-    isHome: true,
-  },
-  {
-    name: "Users",
-    href: "/dashboard/users",
-    icon: Users,
-  },
-];
-
-export function DashboardLayout({ children }: { children: React.ReactNode }) {
+export function DashboardLayout({
+  children,
+  lang,
+  dict,
+}: {
+  children: React.ReactNode;
+  lang: Locale;
+  dict: Dictionary;
+}) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const router = useRouter();
   const { data: session } = useSession();
   const userEmail = session?.user?.email;
+
+  const navigation: NavItem[] = [
+    {
+      name: dict.dashboard.title,
+      href: `/${lang}/dashboard`,
+      icon: LayoutDashboard,
+      isHome: true,
+    },
+    {
+      name: dict.users.title,
+      href: `/${lang}/dashboard/users`,
+      icon: Users,
+    },
+  ];
 
   return (
     <div className="flex h-screen bg-background">
@@ -88,14 +99,15 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
             </div>
           )}
           <form action={handleSignOut}>
+            <input type="hidden" name="locale" value={lang} />
             <Button
               type="submit"
               variant="ghost"
               className={`w-full ${isCollapsed ? "justify-center px-0" : "justify-start"}`}
-              title={isCollapsed ? "Sign out" : undefined}
+              title={isCollapsed ? dict.common.signOut : undefined}
             >
               <LogOut className={`w-5 h-5 ${isCollapsed ? "" : "mr-3"}`} />
-              {!isCollapsed && "Sign out"}
+              {!isCollapsed && dict.common.signOut}
             </Button>
           </form>
         </div>
@@ -109,6 +121,9 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
             <Menu className="w-6 h-6" />
           </button>
           <TabNavigation />
+          <div className="ml-auto">
+            <LanguageSwitcher currentLang={lang} />
+          </div>
         </div>
 
         {/* Page content */}

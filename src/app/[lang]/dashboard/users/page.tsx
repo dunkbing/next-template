@@ -13,19 +13,33 @@ import {
 } from "@/components/ui/card";
 import { Suspense } from "react";
 import { PageLoader } from "@/components/page-loader";
+import { Dictionary, getDictionary } from "@/lib/i18n/get-dictionary";
+import type { Locale } from "@/lib/i18n/config";
 
-async function UsersTableWrapper({ tenantId }: { tenantId: number }) {
+async function UsersTableWrapper({
+  tenantId,
+  dict,
+}: {
+  tenantId: number;
+  dict: Dictionary;
+}) {
   const usersResult = await getUsersByTenant(tenantId);
   const users = usersResult.success ? usersResult.users || [] : [];
-  return <UsersTable users={users} />;
+  return <UsersTable users={users} dict={dict} />;
 }
 
-export default async function UsersPage() {
+export default async function UsersPage({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const { lang } = await params;
+  const dict = await getDictionary(lang as Locale);
   const session = await auth();
   const ability = defineAbilityFor(session?.user?.permissions || []);
 
   if (!ability.can("read", "User")) {
-    redirect("/dashboard");
+    redirect(`/${lang}/dashboard`);
   }
 
   const tenantId = Number.parseInt(session?.user?.tenantId || "0");
@@ -35,12 +49,16 @@ export default async function UsersPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Users</h1>
-          <p className="text-muted-foreground">
-            Manage users in your organization
-          </p>
+          <h1 className="text-3xl font-bold">{dict.users.title}</h1>
+          <p className="text-muted-foreground">{dict.users.description}</p>
         </div>
-        {canCreateUser && <InviteUserDialog tenantId={tenantId} />}
+        {canCreateUser && (
+          <InviteUserDialog
+            tenantId={tenantId}
+            dict={dict}
+            lang={lang as Locale}
+          />
+        )}
       </div>
 
       <Card>
@@ -52,7 +70,7 @@ export default async function UsersPage() {
         </CardHeader>
         <CardContent>
           <Suspense fallback={<PageLoader />}>
-            <UsersTableWrapper tenantId={tenantId} />
+            <UsersTableWrapper tenantId={tenantId} dict={dict} />
           </Suspense>
         </CardContent>
       </Card>

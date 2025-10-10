@@ -35,12 +35,14 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import type { UserWithRole } from "@/db/schema";
+import { Dictionary } from "@/lib/i18n/get-dictionary";
 
 interface UsersTableProps {
   users: UserWithRole[];
+  dict?: Dictionary;
 }
 
-export function UsersTable({ users }: UsersTableProps) {
+export function UsersTable({ users, dict }: UsersTableProps) {
   const router = useRouter();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -89,9 +91,9 @@ export function UsersTable({ users }: UsersTableProps) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Role</TableHead>
+              <TableHead>{dict?.users.table.name || "Name"}</TableHead>
+              <TableHead>{dict?.users.table.email || "Email"}</TableHead>
+              <TableHead>{dict?.users.table.role || "Role"}</TableHead>
               <TableHead>Joined</TableHead>
               <TableHead className="w-[70px]"></TableHead>
             </TableRow>

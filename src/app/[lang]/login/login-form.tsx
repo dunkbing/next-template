@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,12 +11,21 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import Link from "next/link";
 import { useActionState } from "react";
-import { register } from "../actions/auth";
+import { login } from "@/app/actions/auth";
 import { Loader2 } from "lucide-react";
+import type { Locale } from "@/lib/i18n/config";
+import { Dictionary } from "@/lib/i18n/get-dictionary";
 
-export default function Register() {
-  const [state, formAction, pending] = useActionState(register, {
+export default function LoginForm({
+  dict,
+  lang,
+}: {
+  dict: Dictionary;
+  lang: Locale;
+}) {
+  const [state, formAction, pending] = useActionState(login, {
     error: "",
   });
 
@@ -25,40 +33,19 @@ export default function Register() {
     <div className="flex h-screen w-screen items-center justify-center">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Sign Up</CardTitle>
-          <CardDescription>Create your company account</CardDescription>
+          <CardTitle>{dict.auth.login.title}</CardTitle>
+          <CardDescription>{dict.auth.login.description}</CardDescription>
         </CardHeader>
         <form action={formAction}>
           <CardContent className="space-y-4">
+            <input type="hidden" name="locale" value={lang} />
             {state?.error && (
               <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
                 {state.error}
               </div>
             )}
             <div className="space-y-2">
-              <Label htmlFor="companyName">Company Name</Label>
-              <Input
-                id="companyName"
-                name="companyName"
-                type="text"
-                placeholder="Acme Inc"
-                disabled={pending}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="name">Your Name</Label>
-              <Input
-                id="name"
-                name="name"
-                type="text"
-                placeholder="John Doe"
-                disabled={pending}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
+              <Label htmlFor="email">{dict.common.email}</Label>
               <Input
                 id="email"
                 name="email"
@@ -70,7 +57,7 @@ export default function Register() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{dict.common.password}</Label>
               <Input
                 id="password"
                 name="password"
@@ -85,18 +72,20 @@ export default function Register() {
               {pending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Creating account...
+                  {dict.auth.login.button}...
                 </>
               ) : (
-                "Sign Up"
+                dict.auth.login.button
               )}
             </Button>
             <p className="text-center text-sm text-muted-foreground">
-              {"Already have an account? "}
-              <Link href="/login" className="font-semibold hover:underline">
-                Sign in
+              {dict.auth.login.noAccount}{" "}
+              <Link
+                href={`/${lang}/register`}
+                className="font-semibold hover:underline"
+              >
+                {dict.auth.login.signUp}
               </Link>
-              {" instead."}
             </p>
           </CardFooter>
         </form>

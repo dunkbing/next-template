@@ -6,15 +6,18 @@ import { redirect } from "next/navigation";
 import { createUser, getUser } from "./users";
 import { createTenant, getTenantBySlug } from "./tenants";
 import { createRole, getAvailablePermissions } from "./roles";
+import { i18n } from "@/lib/i18n/config";
 
-export async function handleSignOut() {
-  await signOut({ redirectTo: "/" });
+export async function handleSignOut(formData: FormData) {
+  const locale = (formData.get("locale") as string) || i18n.defaultLocale;
+  await signOut({ redirectTo: `/${locale}` });
 }
 
 export async function login(_prevState: { error: string }, formData: FormData) {
   try {
+    const locale = (formData.get("locale") as string) || i18n.defaultLocale;
     await signIn("credentials", {
-      redirectTo: "/dashboard",
+      redirectTo: `/${locale}/dashboard`,
       email: formData.get("email") as string,
       password: formData.get("password") as string,
     });
@@ -36,6 +39,7 @@ export async function register(
   const name = formData.get("name") as string;
   const companyName = formData.get("companyName") as string;
   const companySlug = companyName.toLowerCase().replace(/\s+/g, "-");
+  const locale = (formData.get("locale") as string) || i18n.defaultLocale;
 
   // Check if user already exists
   const existingUser = await getUser(email);
@@ -82,5 +86,5 @@ export async function register(
     customPermissions: [],
   });
 
-  redirect("/login");
+  redirect(`/${locale}/login`);
 }

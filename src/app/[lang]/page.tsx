@@ -8,8 +8,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { getDictionary } from "@/lib/i18n/get-dictionary";
+import type { Locale } from "@/lib/i18n/config";
 
-export default function Home() {
+export default async function Home({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const { lang } = await params;
+  const dict = await getDictionary(lang as Locale);
+
   return (
     <div className="flex min-h-screen items-center justify-center p-8">
       <Card className="w-full max-w-2xl">
@@ -22,18 +31,16 @@ export default function Home() {
             height={38}
             priority
           />
-          <CardTitle className="text-2xl">Welcome to Next.js</CardTitle>
-          <CardDescription>
-            Get started by editing src/app/page.tsx
-          </CardDescription>
+          <CardTitle className="text-2xl">{dict.landing.welcome}</CardTitle>
+          <CardDescription>{dict.landing.description}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="flex gap-4 justify-center flex-col sm:flex-row">
             <Button asChild>
-              <Link href="/login">Sign In</Link>
+              <Link href={`/${lang}/login`}>{dict.landing.signIn}</Link>
             </Button>
             <Button asChild variant="outline">
-              <Link href="/register">Sign Up</Link>
+              <Link href={`/${lang}/register`}>{dict.landing.getStarted}</Link>
             </Button>
           </div>
           <div className="flex gap-6 justify-center flex-wrap">

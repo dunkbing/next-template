@@ -24,12 +24,20 @@ import {
 import { UserPlus } from "lucide-react";
 import { createUser } from "@/app/actions/users";
 import { useRoles } from "@/lib/casl/context";
+import type { Locale } from "@/lib/i18n/config";
+import { Dictionary } from "@/lib/i18n/get-dictionary";
 
 interface InviteUserDialogProps {
   tenantId: number;
+  dict?: Dictionary;
+  lang?: Locale;
 }
 
-export function InviteUserDialog({ tenantId }: InviteUserDialogProps) {
+export function InviteUserDialog({
+  tenantId,
+  dict,
+  lang,
+}: InviteUserDialogProps) {
   const { roles } = useRoles();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -75,35 +83,44 @@ export function InviteUserDialog({ tenantId }: InviteUserDialogProps) {
       <DialogTrigger asChild>
         <Button>
           <UserPlus className="w-4 h-4 mr-2" />
-          Create User
+          {dict?.users.inviteUser || "Create User"}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create User</DialogTitle>
+          <DialogTitle>{dict?.users.invite.title || "Create User"}</DialogTitle>
           <DialogDescription>
-            Add a new user to your organization. They will receive login
-            credentials.
+            {dict?.users.invite.description ||
+              "Add a new user to your organization. They will receive login credentials."}
           </DialogDescription>
         </DialogHeader>
         <form action={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="email">Email *</Label>
+              <Label htmlFor="email">{dict?.common.email || "Email"} *</Label>
               <Input
                 id="email"
                 name="email"
                 type="email"
-                placeholder="user@example.com"
+                placeholder={
+                  dict?.users.invite.emailPlaceholder || "user@example.com"
+                }
                 required
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" name="name" type="text" placeholder="John Doe" />
+              <Label htmlFor="name">{dict?.common.name || "Name"}</Label>
+              <Input
+                id="name"
+                name="name"
+                type="text"
+                placeholder={dict?.users.invite.namePlaceholder || "John Doe"}
+              />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password">Temporary Password *</Label>
+              <Label htmlFor="password">
+                {dict?.common.password || "Password"} *
+              </Label>
               <Input
                 id="password"
                 name="password"
@@ -116,7 +133,11 @@ export function InviteUserDialog({ tenantId }: InviteUserDialogProps) {
               <Label htmlFor="roleId">Role *</Label>
               <Select name="roleId" required>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a role" />
+                  <SelectValue
+                    placeholder={
+                      dict?.users.invite.selectRole || "Select a role"
+                    }
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   {roles.map((role) => (
@@ -136,10 +157,12 @@ export function InviteUserDialog({ tenantId }: InviteUserDialogProps) {
               onClick={() => setOpen(false)}
               disabled={isLoading}
             >
-              Cancel
+              {dict?.common.cancel || "Cancel"}
             </Button>
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Inviting..." : "Create User"}
+              {isLoading
+                ? `${dict?.users.invite.button || "Create User"}...`
+                : dict?.users.invite.button || "Create User"}
             </Button>
           </DialogFooter>
         </form>

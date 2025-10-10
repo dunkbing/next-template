@@ -1,4 +1,14 @@
 import { NextAuthConfig } from "next-auth";
+import { i18n } from "@/lib/i18n/config";
+
+// Helper to extract locale from pathname
+function getLocaleFromPathname(pathname: string) {
+  const segments = pathname.split("/");
+  const potentialLocale = segments[1];
+  return i18n.locales.includes(potentialLocale as any)
+    ? potentialLocale
+    : i18n.defaultLocale;
+}
 
 export const authConfig = {
   pages: {
@@ -10,15 +20,23 @@ export const authConfig = {
   ],
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
-      let isLoggedIn = !!auth?.user;
-      let isOnDashboard = nextUrl.pathname.startsWith("/dashboard");
-      let isOnTrackingPage = nextUrl.pathname.startsWith("/track");
+      const isLoggedIn = !!auth?.user;
+      const locale = getLocaleFromPathname(nextUrl.pathname);
+
+      // Check if pathname includes locale prefix
+      const pathnameWithoutLocale = nextUrl.pathname.replace(
+        new RegExp(`^/${locale}`),
+        "",
+      );
+      const isOnDashboard = pathnameWithoutLocale.startsWith("/dashboard");
+      const isOnTrackingPage = pathnameWithoutLocale.startsWith("/track");
 
       if (isOnDashboard) {
         if (isLoggedIn) return true;
         return false; // Redirect unauthenticated users to login page
-      } else if (isLoggedIn && !isOnTrackingPage) {
-        return Response.redirect(new URL("/dashboard", nextUrl));
+      }
+      if (isLoggedIn && !isOnTrackingPage) {
+        return Response.redirect(new URL(`/${locale}/dashboard`, nextUrl));
       }
 
       return true;

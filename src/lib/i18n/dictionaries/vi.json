@@ -1,0 +1,66 @@
+{
+  "common": {
+    "email": "Email",
+    "password": "Mật khẩu",
+    "name": "Tên",
+    "companyName": "Tên Công ty",
+    "submit": "Gửi",
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "delete": "Xóa",
+    "edit": "Sửa",
+    "loading": "Đang tải...",
+    "signOut": "Đăng xuất"
+  },
+  "auth": {
+    "login": {
+      "title": "Đăng nhập",
+      "description": "Nhập email và mật khẩu để đăng nhập",
+      "button": "Đăng nhập",
+      "noAccount": "Chưa có tài khoản?",
+      "signUp": "Đăng ký"
+    },
+    "register": {
+      "title": "Tạo tài khoản",
+      "description": "Tạo tài khoản công ty của bạn",
+      "button": "Tạo tài khoản",
+      "hasAccount": "Đã có tài khoản?",
+      "signIn": "Đăng nhập",
+      "step1Title": "Thông tin công ty",
+      "step1Description": "Nhập thông tin công ty của bạn"
+    }
+  },
+  "landing": {
+    "welcome": "Chào mừng đến với SecuriWiser Boilerplate",
+    "description": "Một boilerplate Next.js hiện đại với multi-tenancy, RBAC và xác thực",
+    "signIn": "Đăng nhập",
+    "getStarted": "Bắt đầu"
+  },
+  "dashboard": {
+    "title": "Bảng điều khiển",
+    "welcome": "Chào mừng trở lại, {name}!",
+    "overview": "Tổng quan"
+  },
+  "users": {
+    "title": "Người dùng",
+    "description": "Quản lý người dùng trong tổ chức của bạn",
+    "inviteUser": "Mời người dùng",
+    "table": {
+      "name": "Tên",
+      "email": "Email",
+      "role": "Vai trò",
+      "actions": "Hành động"
+    },
+    "invite": {
+      "title": "Mời người dùng",
+      "description": "Gửi lời mời cho người dùng mới",
+      "emailPlaceholder": "user@example.com",
+      "namePlaceholder": "Nguyễn Văn A",
+      "selectRole": "Chọn vai trò",
+      "button": "Gửi lời mời"
+    }
+  },
+  "permissions": {
+    "noPermission": "Bạn không có quyền truy cập tài nguyên này"
+  }
+}

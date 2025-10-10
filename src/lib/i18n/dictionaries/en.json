@@ -1,0 +1,66 @@
+{
+  "common": {
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "companyName": "Company Name",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "loading": "Loading...",
+    "signOut": "Sign Out"
+  },
+  "auth": {
+    "login": {
+      "title": "Sign In",
+      "description": "Enter your email and password to sign in",
+      "button": "Sign In",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up"
+    },
+    "register": {
+      "title": "Create Account",
+      "description": "Create your company account",
+      "button": "Create Account",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "step1Title": "Company Information",
+      "step1Description": "Enter your company details"
+    }
+  },
+  "landing": {
+    "welcome": "Welcome to SecuriWiser Boilerplate",
+    "description": "A modern Next.js boilerplate with multi-tenancy, RBAC, and authentication",
+    "signIn": "Sign In",
+    "getStarted": "Get Started"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome back, {name}!",
+    "overview": "Overview"
+  },
+  "users": {
+    "title": "Users",
+    "description": "Manage users in your organization",
+    "inviteUser": "Invite User",
+    "table": {
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "actions": "Actions"
+    },
+    "invite": {
+      "title": "Invite User",
+      "description": "Send an invitation to a new user",
+      "emailPlaceholder": "user@example.com",
+      "namePlaceholder": "John Doe",
+      "selectRole": "Select a role",
+      "button": "Send Invitation"
+    }
+  },
+  "permissions": {
+    "noPermission": "You don't have permission to access this resource"
+  }
+}
