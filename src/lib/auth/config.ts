@@ -1,7 +1,6 @@
 import { NextAuthConfig } from "next-auth";
 import { i18n } from "@/lib/i18n/config";
 
-// Helper to extract locale from pathname
 function getLocaleFromPathname(pathname: string) {
   const segments = pathname.split("/");
   const potentialLocale = segments[1];

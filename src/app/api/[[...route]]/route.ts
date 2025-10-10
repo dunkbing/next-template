@@ -3,7 +3,8 @@ import { handle } from "hono/vercel";
 import { zValidator } from "@hono/zod-validator";
 import { registerUserSchema } from "@/db/schema";
 import { initAuthConfig, verifyAuth } from "@hono/auth-js";
-import { credentials } from "@/auth";
+import { credentials } from "@/lib/auth";
+import { honoAuthCallbacks } from "@/lib/auth/callbacks";
 
 const app = new Hono().basePath("/api");
 
@@ -14,13 +15,14 @@ app.get("/health", (c) => {
   });
 });
 
-// Initialize Auth.js configuration for Hono
+// Initialize Auth.js configuration for Hono - use the same callbacks as NextAuth
 app.use(
   "*",
   initAuthConfig((c) => {
     return {
       secret: process.env.AUTH_SECRET,
       providers: [credentials],
+      ...honoAuthCallbacks,
     };
   }),
 );

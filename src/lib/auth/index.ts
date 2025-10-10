@@ -1,10 +1,11 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { compare } from "bcrypt-ts";
-import { authConfig } from "./auth.config";
-import { getUser } from "./app/actions/users";
-import { getUserPermissions } from "./lib/casl/ability";
-import { RegisterUser } from "./db/schema/users";
+import { authConfig } from "./config";
+import { getUserPermissions } from "../casl/ability";
+import { authCallbacks } from "./callbacks";
+import { getUser } from "@/app/actions/users";
+import { type RegisterUser } from "@/db/schema";
 
 export const credentials = Credentials({
   async authorize(credentials) {
@@ -35,27 +36,8 @@ export const nextAuth = NextAuth({
   ...authConfig,
   providers: [credentials],
   callbacks: {
-    ...authConfig.callbacks,
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-        token.tenantId = user.tenantId;
-        token.roleId = user.roleId;
-        token.roleName = user.roleName;
-        token.permissions = user.permissions;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (token && session.user) {
-        session.user.id = token.id as string;
-        session.user.tenantId = token.tenantId as string;
-        session.user.roleId = token.roleId as string;
-        session.user.roleName = token.roleName as string;
-        session.user.permissions = token.permissions as string[];
-      }
-      return session;
-    },
+    authorized: authConfig.callbacks.authorized,
+    ...authCallbacks,
   },
 });
 

@@ -1,4 +1,4 @@
-import { auth } from "@/auth";
+import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { defineAbilityFor } from "@/lib/casl/ability";
 import { getUsersByTenant } from "@/app/actions/users";

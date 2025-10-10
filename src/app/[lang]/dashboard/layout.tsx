@@ -1,4 +1,4 @@
-import { auth } from "@/auth";
+import { auth } from "@/lib/auth";
 import { DashboardLayout } from "@/components/dashboard-layout";
 import { SessionProvider } from "next-auth/react";
 import { AbilityProvider } from "@/lib/casl/context";
