@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import "maplibre-gl/dist/maplibre-gl.css";
 import { TabProvider } from "@/contexts/tab-context";
 
 const geistSans = Geist({

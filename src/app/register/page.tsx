@@ -1,5 +1,6 @@
+"use client";
+
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,71 +12,14 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { createUser, getUser } from "../actions/users";
-import { createTenant, getTenantBySlug } from "../actions/tenants";
-import { createRole } from "../actions/roles";
-import { getAvailablePermissions } from "../actions/roles";
+import { useActionState } from "react";
+import { register } from "../actions/auth";
+import { Loader2 } from "lucide-react";
 
-export default function Login() {
-  async function register(formData: FormData) {
-    "use server";
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    const name = formData.get("name") as string;
-    const companyName = formData.get("companyName") as string;
-    const companySlug = companyName.toLowerCase().replace(/\s+/g, "-");
-
-    // Check if user already exists
-    const existingUser = await getUser(email);
-    if (existingUser) {
-      // TODO: Handle errors with useFormStatus
-      return;
-    }
-
-    // Check if tenant already exists
-    const existingTenant = await getTenantBySlug(companySlug);
-    if (existingTenant.tenant) {
-      // TODO: Handle errors with useFormStatus
-      return;
-    }
-
-    // Create tenant
-    const tenantResult = await createTenant({
-      name: companyName,
-      slug: companySlug,
-    });
-
-    if (!tenantResult.success || !tenantResult.tenant) {
-      // TODO: Handle errors
-      return;
-    }
-
-    // Create default admin role with all permissions
-    const allPermissions = await getAvailablePermissions();
-    const roleResult = await createRole({
-      tenantId: tenantResult.tenant.id,
-      name: "Admin",
-      description: "Administrator with full access",
-      permissions: allPermissions,
-    });
-
-    if (!roleResult.success || !roleResult.role) {
-      // TODO: Handle errors
-      return;
-    }
-
-    // Create user with admin role
-    await createUser({
-      email,
-      password,
-      name,
-      tenantId: tenantResult.tenant.id,
-      roleId: roleResult.role.id,
-      customPermissions: [],
-    });
-
-    redirect("/login");
-  }
+export default function Register() {
+  const [state, formAction, pending] = useActionState(register, {
+    error: "",
+  });
 
   return (
     <div className="flex h-screen w-screen items-center justify-center">
@@ -84,8 +28,13 @@ export default function Login() {
           <CardTitle>Sign Up</CardTitle>
           <CardDescription>Create your company account</CardDescription>
         </CardHeader>
-        <form action={register}>
+        <form action={formAction}>
           <CardContent className="space-y-4">
+            {state?.error && (
+              <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+                {state.error}
+              </div>
+            )}
             <div className="space-y-2">
               <Label htmlFor="companyName">Company Name</Label>
               <Input
@@ -93,6 +42,7 @@ export default function Login() {
                 name="companyName"
                 type="text"
                 placeholder="Acme Inc"
+                disabled={pending}
                 required
               />
             </div>
@@ -103,6 +53,7 @@ export default function Login() {
                 name="name"
                 type="text"
                 placeholder="John Doe"
+                disabled={pending}
                 required
               />
             </div>
@@ -114,17 +65,31 @@ export default function Login() {
                 type="email"
                 placeholder="user@acme.com"
                 autoComplete="email"
+                disabled={pending}
                 required
               />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" name="password" type="password" required />
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                disabled={pending}
+                required
+              />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full">
-              Sign Up
+            <Button type="submit" className="w-full" disabled={pending}>
+              {pending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Creating account...
+                </>
+              ) : (
+                "Sign Up"
+              )}
             </Button>
             <p className="text-center text-sm text-muted-foreground">
               {"Already have an account? "}

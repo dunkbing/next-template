@@ -1,4 +1,5 @@
-import { auth, signIn } from "@/auth";
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,18 +12,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { AuthError } from "next-auth";
+import { useActionState } from "react";
+import { login } from "../actions/auth";
+import { Loader2 } from "lucide-react";
 
-export default async function Login(props: {
-  searchParams: Promise<{ error?: string }>;
-}) {
-  const session = await auth();
-  const searchParams = await props.searchParams;
-
-  if (session) {
-    redirect("/dashboard");
-  }
+export default function Login() {
+  const [state, formAction, pending] = useActionState(login, {
+    error: "",
+  });
 
   return (
     <div className="flex h-screen w-screen items-center justify-center">
@@ -33,27 +30,11 @@ export default async function Login(props: {
             Use your email and password to sign in
           </CardDescription>
         </CardHeader>
-        <form
-          action={async (formData: FormData) => {
-            "use server";
-            try {
-              await signIn("credentials", {
-                redirectTo: "/dashboard",
-                email: formData.get("email") as string,
-                password: formData.get("password") as string,
-              });
-            } catch (error) {
-              if (error instanceof AuthError) {
-                return redirect(`/login?error=Invalid credentials`);
-              }
-              throw error;
-            }
-          }}
-        >
+        <form action={formAction}>
           <CardContent className="space-y-4">
-            {searchParams.error && (
+            {state?.error && (
               <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
-                {searchParams.error}
+                {state.error}
               </div>
             )}
             <div className="space-y-2">
@@ -64,17 +45,31 @@ export default async function Login(props: {
                 type="email"
                 placeholder="user@acme.com"
                 autoComplete="email"
+                disabled={pending}
                 required
               />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" name="password" type="password" required />
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                disabled={pending}
+                required
+              />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full">
-              Sign in
+            <Button type="submit" className="w-full" disabled={pending}>
+              {pending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Signing in...
+                </>
+              ) : (
+                "Sign in"
+              )}
             </Button>
             <p className="text-center text-sm text-muted-foreground">
               {"Don't have an account? "}
