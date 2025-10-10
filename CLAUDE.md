@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Next.js 15 application with authentication using NextAuth v5, PostgreSQL database with Drizzle ORM, and shadcn/ui components. The project uses Biome for linting/formatting instead of ESLint/Prettier.
+This is a Next.js 15 application with authentication using NextAuth v5, PostgreSQL database with Drizzle ORM, Hono for API routes, and shadcn/ui components. The project uses Biome for linting/formatting instead of ESLint/Prettier.
 
 ## Development Commands
 
@@ -89,21 +89,40 @@ Required environment variables (see `.env.example`):
 - **Validation**: Checks for existing users and duplicate tenant slugs
 - **Error Handling**: User-friendly error messages for registration failures
 
+### Internationalization (i18n)
+- **Supported Languages**: English (en), Vietnamese (vi), French (fr)
+- **Locale Detection**: Automatic detection from browser preferences and cookies
+- **Routing**: All routes prefixed with locale (e.g., `/en/dashboard`, `/vi/login`)
+- **Dictionary Files**: JSON translation files in `src/lib/i18n/dictionaries/`
+- **Language Switcher**: Globe icon dropdown in dashboard header
+- **Configuration**: `src/lib/i18n/config.ts` for locale settings
+- **Utilities**: `getDictionary()` for server-side translations, `interpolate()` for dynamic strings
+
 ### Pages & UI
-- **Landing Page** (`src/app/page.tsx`): Public home page with sign-in redirect for authenticated users
-- **Login Page** (`src/app/login/page.tsx`): Client component with loading states and error handling
-- **Register Page** (`src/app/register/page.tsx`): Multi-step registration with company setup
-- **Dashboard** (`src/app/dashboard/page.tsx`): Protected dashboard with user greeting
-- **Users Management** (`src/app/dashboard/users/page.tsx`): 
+- **Landing Page** (`src/app/[lang]/page.tsx`): Public home page with sign-in redirect for authenticated users
+- **Login Page** (`src/app/[lang]/login/page.tsx`): Client component with loading states and error handling
+- **Register Page** (`src/app/[lang]/register/page.tsx`): Multi-step registration with company setup
+- **Dashboard** (`src/app/[lang]/dashboard/page.tsx`): Protected dashboard with user greeting
+- **Users Management** (`src/app/[lang]/dashboard/users/page.tsx`):
   - Lists all users in tenant
   - Permission-gated (requires `read:User`)
   - Invite user functionality (requires `create:User`)
   - User table with role display
 - **Loading States**: All forms use `useActionState` hook with pending states and disabled inputs
 
+### API Routes with Hono
+- **Hono Integration**: Fast, lightweight web framework for Edge runtime
+- **API Base Path**: All API routes under `/api` via catch-all route handler
+- **Route Handler**: `src/app/api/[[...route]]/route.ts` handles all HTTP methods
+- **Validation**: Zod schema validation with `@hono/zod-validator`
+- **Example Endpoints**:
+  - `GET /api/health` - Health check endpoint
+  - `POST /api/users` - Create user with JSON validation
+
 ### Components
 - **Users Table** (`src/components/users-table.tsx`): Display and manage tenant users
 - **Invite User Dialog** (`src/components/invite-user-dialog.tsx`): Permission-gated user invitation
+- **Language Switcher** (`src/components/language-switcher.tsx`): Dropdown for switching languages
 - **Page Loader** (`src/components/page-loader.tsx`): Loading UI for suspense boundaries
 - **shadcn/ui**: Card, Button, Input, Label, Dialog, Table, and more
 
@@ -137,15 +156,18 @@ Required environment variables (see `.env.example`):
 
 ### Project Structure
 - **Server Actions**: Located in `src/app/actions/`
-  - `auth.ts`: Login, register, sign out actions
+  - `auth.ts`: Login, register, sign out actions with i18n support
   - `users.ts`: User CRUD operations
   - `roles.ts`: Role CRUD operations and permission helpers
   - `tenants.ts`: Tenant CRUD operations
-- **API Routes**: NextAuth handlers at `src/app/api/auth/[...nextauth]/route.ts`
+- **API Routes**:
+  - Hono API: `src/app/api/[[...route]]/route.ts` - Main API handler
+  - NextAuth: `src/app/api/auth/[...nextauth]/route.ts` - Auth handlers
 - **Components**: UI components in `src/components/` with shadcn/ui components in `src/components/ui/`
 - **Configuration**: Centralized in `src/lib/configs.ts` for environment variables
 - **Auth Config**: Split between `src/auth.config.ts` (edge) and `src/auth.ts` (full)
 - **CASL**: Permission system in `src/lib/casl/ability.ts`
+- **i18n**: Configuration in `src/lib/i18n/config.ts`, dictionaries in `src/lib/i18n/dictionaries/`
 
 ### Path Aliases
 TypeScript path alias `@/*` maps to `src/*` (configured in `tsconfig.json`)
@@ -181,6 +203,16 @@ TypeScript path alias `@/*` maps to `src/*` (configured in `tsconfig.json`)
 ### Validation
 - Use Zod for schema validation
 - Use drizzle-zod for creating Zod schemas from Drizzle tables
+- For API routes, use `@hono/zod-validator` with Hono
+
+### API Development with Hono
+- All API routes go in `src/app/api/[[...route]]/route.ts`
+- Use `.basePath('/api')` to set the base path for all routes
+- Export HTTP method handlers: `GET`, `POST`, `PUT`, `PATCH`, `DELETE`
+- Use `zValidator('json', schema)` for request validation
+- Return JSON with `c.json({ data }, statusCode)`
+- Access query params: `c.req.query('param')`
+- Access path params: `c.req.param('id')`
 
 ### Permissions
 - Check permissions server-side before rendering protected content

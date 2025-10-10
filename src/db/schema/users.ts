@@ -6,6 +6,8 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
 import { tenants } from "./tenants";
 import { roles, SelectRole } from "./roles";
 
@@ -27,6 +29,18 @@ export const users = pgTable("users", {
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
 });
+
+export const insertUserSchema = createInsertSchema(users).omit({
+  customPermissions: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const registerUserSchema = z.object({
+  email: z.string().email("Invalid email"),
+  password: z.string().min(1, "password is required"),
+});
+export type RegisterUser = z.infer<typeof registerUserSchema>;
 
 export const usersRelations = relations(users, ({ one }) => ({
   tenant: one(tenants, {

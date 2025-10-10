@@ -4,43 +4,36 @@ import { compare } from "bcrypt-ts";
 import { authConfig } from "./auth.config";
 import { getUser } from "./app/actions/users";
 import { getUserPermissions } from "./lib/casl/ability";
+import { RegisterUser } from "./db/schema/users";
 
-export const {
-  handlers: { GET, POST },
-  auth,
-  signIn,
-  signOut,
-} = NextAuth({
+export const credentials = Credentials({
+  async authorize(credentials) {
+    const { email, password } = credentials as RegisterUser;
+    const user = await getUser(email);
+    if (!user) return null;
+
+    const passwordsMatch = await compare(password, user.password);
+    if (!passwordsMatch) return null;
+
+    const rolePermissions = user.role?.permissions || [];
+    const customPermissions = user.customPermissions || [];
+    const permissions = getUserPermissions(rolePermissions, customPermissions);
+
+    return {
+      id: user.id.toString(),
+      email: user.email,
+      name: user.name,
+      tenantId: user.tenantId.toString(),
+      roleId: user.roleId.toString(),
+      roleName: user.role?.name,
+      permissions,
+    };
+  },
+});
+
+export const nextAuth = NextAuth({
   ...authConfig,
-  providers: [
-    Credentials({
-      async authorize({ email, password }: any) {
-        const user = await getUser(email);
-        if (!user) return null;
-
-        const passwordsMatch = await compare(password, user.password);
-        if (!passwordsMatch) return null;
-
-        // Get combined permissions from role and custom permissions
-        const rolePermissions = user.role?.permissions || [];
-        const customPermissions = user.customPermissions || [];
-        const permissions = getUserPermissions(
-          rolePermissions,
-          customPermissions,
-        );
-
-        return {
-          id: user.id.toString(),
-          email: user.email,
-          name: user.name,
-          tenantId: user.tenantId.toString(),
-          roleId: user.roleId.toString(),
-          roleName: user.role?.name,
-          permissions,
-        } as any;
-      },
-    }),
-  ],
+  providers: [credentials],
   callbacks: {
     ...authConfig.callbacks,
     async jwt({ token, user }) {
@@ -65,3 +58,10 @@ export const {
     },
   },
 });
+
+export const {
+  handlers: { GET, POST },
+  auth,
+  signIn,
+  signOut,
+} = nextAuth;
