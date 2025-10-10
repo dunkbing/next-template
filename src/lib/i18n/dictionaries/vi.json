@@ -31,7 +31,7 @@
     }
   },
   "landing": {
-    "welcome": "Chào mừng đến với SecuriWiser Boilerplate",
+    "welcome": "Chào mừng đến với NextJS Boilerplate",
     "description": "Một boilerplate Next.js hiện đại với multi-tenancy, RBAC và xác thực",
     "signIn": "Đăng nhập",
     "getStarted": "Bắt đầu"

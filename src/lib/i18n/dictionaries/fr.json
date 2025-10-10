@@ -31,7 +31,7 @@
     }
   },
   "landing": {
-    "welcome": "Bienvenue sur SecuriWiser Boilerplate",
+    "welcome": "Bienvenue sur NextJS Boilerplate",
     "description": "Un boilerplate Next.js moderne avec multi-tenancy, RBAC et authentification",
     "signIn": "Se connecter",
     "getStarted": "Commencer"

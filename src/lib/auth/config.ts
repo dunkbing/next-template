@@ -28,13 +28,18 @@ export const authConfig = {
         "",
       );
       const isOnDashboard = pathnameWithoutLocale.startsWith("/dashboard");
-      const isOnTrackingPage = pathnameWithoutLocale.startsWith("/track");
+      const isOnLoginPage = pathnameWithoutLocale.startsWith("/login");
+      const isOnRegisterPage = pathnameWithoutLocale.startsWith("/register");
+      const isOnHomePage =
+        pathnameWithoutLocale === "" || pathnameWithoutLocale === "/";
 
       if (isOnDashboard) {
         if (isLoggedIn) return true;
         return false; // Redirect unauthenticated users to login page
       }
-      if (isLoggedIn && !isOnTrackingPage) {
+
+      // Redirect logged-in users away from login/register to dashboard
+      if (isLoggedIn && (isOnLoginPage || isOnRegisterPage)) {
         return Response.redirect(new URL(`/${locale}/dashboard`, nextUrl));
       }
 
