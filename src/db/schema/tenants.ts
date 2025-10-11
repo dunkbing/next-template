@@ -1,7 +1,7 @@
-import { integer, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
-import { users } from "./users";
+import { integer, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 import { roles } from "./roles";
+import { users } from "./users";
 
 export const tenants = pgTable("tenants", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),

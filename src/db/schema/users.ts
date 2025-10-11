@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   integer,
   jsonb,
@@ -5,11 +6,10 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import { roles, type SelectRole } from "./roles";
 import { tenants } from "./tenants";
-import { roles, SelectRole } from "./roles";
 
 export const users = pgTable("users", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -41,6 +41,14 @@ export const registerUserSchema = z.object({
   password: z.string().min(1, "password is required"),
 });
 export type RegisterUser = z.infer<typeof registerUserSchema>;
+
+export const createUserSchema = z.object({
+  email: z.string().min(1, "Email is required").email("Invalid email address"),
+  name: z.string().optional(),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  roleId: z.number().int().positive("Role is required"),
+});
+export type CreateUser = z.infer<typeof createUserSchema>;
 
 export const usersRelations = relations(users, ({ one }) => ({
   tenant: one(tenants, {

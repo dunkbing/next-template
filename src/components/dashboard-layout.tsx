@@ -1,22 +1,22 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { useSession } from "next-auth/react";
 import {
+  ChevronLeft,
+  ChevronRight,
   LayoutDashboard,
   LogOut,
   Menu,
-  ChevronLeft,
-  ChevronRight,
   Users,
 } from "lucide-react";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { TabNavigation } from "./tab-navigation";
+import { useSession } from "next-auth/react";
+import { useState } from "react";
 import { handleSignOut } from "@/app/actions/auth";
+import { Button } from "@/components/ui/button";
 import type { Locale } from "@/lib/i18n/config";
+import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import { LanguageSwitcher } from "./language-switcher";
-import { Dictionary } from "@/lib/i18n/get-dictionary";
+import { TabNavigation } from "./tab-navigation";
 
 interface NavItem {
   name: string;

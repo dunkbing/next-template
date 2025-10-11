@@ -1,5 +1,6 @@
 "use client";
 
+import { Globe } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,8 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Globe } from "lucide-react";
-import { i18n, localeNames, type Locale } from "@/lib/i18n/config";
+import { i18n, type Locale, localeNames } from "@/lib/i18n/config";
 
 export function LanguageSwitcher({ currentLang }: { currentLang: Locale }) {
   const pathname = usePathname();

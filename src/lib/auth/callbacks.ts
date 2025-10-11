@@ -1,6 +1,6 @@
-import type { JWT } from "next-auth/jwt";
-import type { Session, User } from "next-auth";
 import type { AuthConfig } from "@auth/core/types";
+import type { Session, User } from "next-auth";
+import type { JWT } from "next-auth/jwt";
 
 // Shared implementation logic
 function populateTokenFromUser(token: JWT, user: User) {

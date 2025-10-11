@@ -1,8 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { getAvailablePermissions } from "@/app/actions/roles";
+import { updateUserPermissions, updateUserRole } from "@/app/actions/users";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -20,11 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { updateUserRole, updateUserPermissions } from "@/app/actions/users";
-import { getAvailablePermissions } from "@/app/actions/roles";
-import { useEffect } from "react";
-import { UserWithRole } from "@/db/schema";
+import type { UserWithRole } from "@/db/schema";
 import { useRoles } from "@/lib/casl/context";
 
 interface EditUserDialogProps {

@@ -1,13 +1,13 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import {
   createContext,
+  type ReactNode,
   useContext,
-  useState,
   useEffect,
-  ReactNode,
+  useState,
 } from "react";
-import { usePathname } from "next/navigation";
 
 interface Tab {
   path: string;

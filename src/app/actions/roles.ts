@@ -1,8 +1,8 @@
 "use server";
 
+import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { roles } from "@/db/schema/roles";
-import { eq } from "drizzle-orm";
 
 export async function createRole(data: {
   tenantId: number;

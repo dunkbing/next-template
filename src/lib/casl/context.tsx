@@ -1,10 +1,10 @@
 "use client";
 
-import { createContext, useContext, useMemo, type ReactNode } from "react";
 import { createContextualCan } from "@casl/react";
 import { useSession } from "next-auth/react";
-import { type AppAbility, defineAbilityFor } from "./ability";
+import { createContext, type ReactNode, useContext, useMemo } from "react";
 import type { SelectRole } from "@/db/schema";
+import { type AppAbility, defineAbilityFor } from "./ability";
 
 const AbilityContext = createContext<AppAbility>(defineAbilityFor([]));
 

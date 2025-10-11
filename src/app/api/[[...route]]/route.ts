@@ -1,8 +1,8 @@
+import { initAuthConfig, verifyAuth } from "@hono/auth-js";
+import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
-import { zValidator } from "@hono/zod-validator";
 import { registerUserSchema } from "@/db/schema";
-import { initAuthConfig, verifyAuth } from "@hono/auth-js";
 import { credentials } from "@/lib/auth";
 import { honoAuthCallbacks } from "@/lib/auth/callbacks";
 

@@ -1,4 +1,3 @@
-import { auth } from "@/lib/auth";
 import {
   Card,
   CardContent,
@@ -6,8 +5,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getDictionary, interpolate } from "@/lib/i18n/get-dictionary";
+import { auth } from "@/lib/auth";
 import type { Locale } from "@/lib/i18n/config";
+import { getDictionary, interpolate } from "@/lib/i18n/get-dictionary";
 
 export default async function DashboardPage({
   params,

@@ -1,4 +1,4 @@
-import { NextAuthConfig } from "next-auth";
+import type { NextAuthConfig } from "next-auth";
 import { i18n } from "@/lib/i18n/config";
 
 function getLocaleFromPathname(pathname: string) {

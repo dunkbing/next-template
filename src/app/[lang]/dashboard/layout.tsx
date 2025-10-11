@@ -1,13 +1,13 @@
-import { auth } from "@/lib/auth";
-import { DashboardLayout } from "@/components/dashboard-layout";
-import { SessionProvider } from "next-auth/react";
-import { AbilityProvider } from "@/lib/casl/context";
-import { getRolesByTenant } from "@/app/actions/roles";
-import { defineAbilityFor } from "@/lib/casl/ability";
-import { getDictionary } from "@/lib/i18n/get-dictionary";
-import type { Locale } from "@/lib/i18n/config";
-import { SelectRole } from "@/db/schema";
 import { redirect } from "next/navigation";
+import { SessionProvider } from "next-auth/react";
+import { getRolesByTenant } from "@/app/actions/roles";
+import { DashboardLayout } from "@/components/dashboard-layout";
+import type { SelectRole } from "@/db/schema";
+import { auth } from "@/lib/auth";
+import { defineAbilityFor } from "@/lib/casl/ability";
+import { AbilityProvider } from "@/lib/casl/context";
+import type { Locale } from "@/lib/i18n/config";
+import { getDictionary } from "@/lib/i18n/get-dictionary";
 
 export default async function Layout({
   children,

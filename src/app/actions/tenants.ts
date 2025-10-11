@@ -1,8 +1,8 @@
 "use server";
 
+import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { tenants } from "@/db/schema/tenants";
-import { eq } from "drizzle-orm";
 
 export async function createTenant(data: { name: string; slug: string }) {
   try {

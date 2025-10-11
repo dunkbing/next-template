@@ -1,5 +1,9 @@
 "use client";
 
+import { Loader2 } from "lucide-react";
+import Link from "next/link";
+import { useActionState } from "react";
+import { login } from "@/app/actions/auth";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,12 +15,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Link from "next/link";
-import { useActionState } from "react";
-import { login } from "@/app/actions/auth";
-import { Loader2 } from "lucide-react";
 import type { Locale } from "@/lib/i18n/config";
-import { Dictionary } from "@/lib/i18n/get-dictionary";
+import type { Dictionary } from "@/lib/i18n/get-dictionary";
 
 export default function LoginForm({
   dict,

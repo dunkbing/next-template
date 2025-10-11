@@ -1,9 +1,8 @@
-import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { defineAbilityFor } from "@/lib/casl/ability";
+import { Suspense } from "react";
 import { getUsersByTenant } from "@/app/actions/users";
-import { UsersTable } from "@/components/users-table";
-import { InviteUserDialog } from "@/components/invite-user-dialog";
+import { CreateUserDialog } from "@/components/create-user-dialog";
+import { PageLoader } from "@/components/page-loader";
 import {
   Card,
   CardContent,
@@ -11,10 +10,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Suspense } from "react";
-import { PageLoader } from "@/components/page-loader";
-import { Dictionary, getDictionary } from "@/lib/i18n/get-dictionary";
+import { UsersTable } from "@/components/users-table";
+import { auth } from "@/lib/auth";
+import { defineAbilityFor } from "@/lib/casl/ability";
 import type { Locale } from "@/lib/i18n/config";
+import { type Dictionary, getDictionary } from "@/lib/i18n/get-dictionary";
 
 async function UsersTableWrapper({
   tenantId,
@@ -53,7 +53,7 @@ export default async function UsersPage({
           <p className="text-muted-foreground">{dict.users.description}</p>
         </div>
         {canCreateUser && (
-          <InviteUserDialog
+          <CreateUserDialog
             tenantId={tenantId}
             dict={dict}
             lang={lang as Locale}

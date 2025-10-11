@@ -1,11 +1,11 @@
+import { compare } from "bcrypt-ts";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { compare } from "bcrypt-ts";
-import { authConfig } from "./config";
+import { getUser } from "@/app/actions/users";
+import type { RegisterUser } from "@/db/schema";
 import { getUserPermissions } from "../casl/ability";
 import { authCallbacks } from "./callbacks";
-import { getUser } from "@/app/actions/users";
-import { type RegisterUser } from "@/db/schema";
+import { authConfig } from "./config";
 
 export const credentials = Credentials({
   async authorize(credentials) {

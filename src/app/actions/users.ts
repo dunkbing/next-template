@@ -1,9 +1,9 @@
 "use server";
 
+import { genSaltSync, hashSync } from "bcrypt-ts";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { users } from "@/db/schema/users";
-import { genSaltSync, hashSync } from "bcrypt-ts";
 
 export async function getUser(email: string) {
   return await db.query.users.findFirst({
