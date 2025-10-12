@@ -86,7 +86,7 @@ export function CreateUserDialog({
       <DialogTrigger asChild>
         <Button>
           <UserPlus className="w-4 h-4 mr-2" />
-          {dict?.users.inviteUser || "Create User"}
+          {dict?.users.createUser || "Create User"}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

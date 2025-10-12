@@ -44,7 +44,7 @@
   "users": {
     "title": "Người dùng",
     "description": "Quản lý người dùng trong tổ chức của bạn",
-    "inviteUser": "Mời người dùng",
+    "createUser": "Mời người dùng",
     "table": {
       "name": "Tên",
       "email": "Email",

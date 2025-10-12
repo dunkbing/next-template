@@ -44,7 +44,7 @@
   "users": {
     "title": "Users",
     "description": "Manage users in your organization",
-    "inviteUser": "Invite User",
+    "createUser": "Create User",
     "table": {
       "name": "Name",
       "email": "Email",
@@ -52,7 +52,7 @@
       "actions": "Actions"
     },
     "invite": {
-      "title": "Invite User",
+      "title": "Create User",
       "description": "Send an invitation to a new user",
       "emailPlaceholder": "user@example.com",
       "namePlaceholder": "John Doe",

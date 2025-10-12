@@ -1,8 +1,9 @@
 "use client";
 
+import { useState } from "react";
+import { useForm } from "@tanstack/react-form";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useActionState } from "react";
 import { register } from "@/app/actions/auth";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,25 +16,11 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { FieldError } from "@/components/ui/field";
 import type { Locale } from "@/lib/i18n/config";
-
-type Dictionary = {
-  common: {
-    email: string;
-    password: string;
-    name: string;
-    companyName: string;
-  };
-  auth: {
-    register: {
-      title: string;
-      description: string;
-      button: string;
-      hasAccount: string;
-      signIn: string;
-    };
-  };
-};
+import { registerUserSchema } from "@/db/schema/users";
+import { Dictionary } from "@/lib/i18n/get-dictionary";
+import { redirect } from 'next/navigation'
 
 export default function RegisterForm({
   dict,
@@ -42,8 +29,27 @@ export default function RegisterForm({
   dict: Dictionary;
   lang: Locale;
 }) {
-  const [state, formAction, pending] = useActionState(register, {
-    error: "",
+  const [error, setError] = useState("");
+
+  const form = useForm({
+    defaultValues: {
+      companyName: "",
+      name: "",
+      email: "",
+      password: "",
+    },
+    validators: { onSubmit: registerUserSchema },
+    onSubmit: async ({ value }) => {
+      setError("");
+
+      const result = await register(value);
+
+      if (result?.error) {
+        setError(result.error);
+      } else {
+        redirect(`/${lang}/login`);
+      }
+    },
   });
 
   return (
@@ -53,62 +59,160 @@ export default function RegisterForm({
           <CardTitle>{dict.auth.register.title}</CardTitle>
           <CardDescription>{dict.auth.register.description}</CardDescription>
         </CardHeader>
-        <form action={formAction}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            form.handleSubmit();
+          }}
+        >
           <CardContent className="space-y-4">
-            <input type="hidden" name="locale" value={lang} />
-            {state?.error && (
+            {error && (
               <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
-                {state.error}
+                {error}
               </div>
             )}
-            <div className="space-y-2">
-              <Label htmlFor="companyName">{dict.common.companyName}</Label>
-              <Input
-                id="companyName"
-                name="companyName"
-                type="text"
-                placeholder="Acme Inc"
-                disabled={pending}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="name">{dict.common.name}</Label>
-              <Input
-                id="name"
-                name="name"
-                type="text"
-                placeholder="John Doe"
-                disabled={pending}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">{dict.common.email}</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="user@acme.com"
-                autoComplete="email"
-                disabled={pending}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">{dict.common.password}</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                disabled={pending}
-                required
-              />
-            </div>
+
+            <form.Field
+              name="companyName"
+              validators={{
+                onChange: registerUserSchema.shape.companyName,
+              }}
+              children={(field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid;
+                return (
+                  <div className="space-y-2">
+                    <Label htmlFor={field.name}>
+                      {dict.common.companyName}
+                    </Label>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      type="text"
+                      placeholder="Acme Inc"
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      disabled={form.state.isSubmitting}
+                      aria-invalid={
+                        field.state.meta.errors.length > 0 ? "true" : "false"
+                      }
+                      data-invalid={field.state.meta.errors.length > 0}
+                    />
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
+                  </div>
+                );
+              }}
+            />
+
+            <form.Field
+              name="name"
+              validators={{
+                onChange: registerUserSchema.shape.name,
+              }}
+              children={(field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid;
+                return (
+                  <div className="space-y-2">
+                    <Label htmlFor={field.name}>{dict.common.name}</Label>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      type="text"
+                      placeholder="John Doe"
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      disabled={form.state.isSubmitting}
+                      aria-invalid={
+                        field.state.meta.errors.length > 0 ? "true" : "false"
+                      }
+                      data-invalid={field.state.meta.errors.length > 0}
+                    />
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
+                  </div>
+                );
+              }}
+            />
+
+            <form.Field
+              name="email"
+              validators={{
+                onChange: registerUserSchema.shape.email,
+              }}
+              children={(field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid;
+                return (
+                  <div className="space-y-2">
+                    <Label htmlFor={field.name}>{dict.common.email}</Label>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      type="email"
+                      placeholder="user@acme.com"
+                      autoComplete="email"
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      disabled={form.state.isSubmitting}
+                      aria-invalid={
+                        field.state.meta.errors.length > 0 ? "true" : "false"
+                      }
+                      data-invalid={field.state.meta.errors.length > 0}
+                    />
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
+                  </div>
+                );
+              }}
+            />
+
+            <form.Field
+              name="password"
+              validators={{
+                onChange: registerUserSchema.shape.password,
+              }}
+              children={(field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid;
+                return (
+                  <div className="space-y-2">
+                    <Label htmlFor={field.name}>{dict.common.password}</Label>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      type="password"
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      disabled={form.state.isSubmitting}
+                      aria-invalid={
+                        field.state.meta.errors.length > 0 ? "true" : "false"
+                      }
+                      data-invalid={field.state.meta.errors.length > 0}
+                    />
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
+                  </div>
+                );
+              }}
+            />
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full" disabled={pending}>
-              {pending ? (
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={form.state.isSubmitting}
+            >
+              {form.state.isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   {dict.auth.register.button}...

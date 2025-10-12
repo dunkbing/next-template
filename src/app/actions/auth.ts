@@ -4,6 +4,10 @@ import { redirect } from "next/navigation";
 import { AuthError } from "next-auth";
 import { signIn, signOut } from "@/lib/auth";
 import { i18n } from "@/lib/i18n/config";
+import {
+  type LoginUser,
+  type RegisterUser,
+} from "@/db/schema/users";
 import { createRole, getAvailablePermissions } from "./roles";
 import { createTenant, getTenantBySlug } from "./tenants";
 import { createUser, getUser } from "./users";
@@ -13,13 +17,13 @@ export async function handleSignOut(formData: FormData) {
   await signOut({ redirectTo: `/${locale}` });
 }
 
-export async function login(_prevState: { error: string }, formData: FormData) {
+export async function login(data: LoginUser) {
   try {
-    const locale = (formData.get("locale") as string) || i18n.defaultLocale;
+    // const locale = data.locale || i18n.defaultLocale;
     await signIn("credentials", {
-      redirectTo: `/${locale}/dashboard`,
-      email: formData.get("email") as string,
-      password: formData.get("password") as string,
+      // redirectTo: `/${locale}/dashboard`,
+      email: data.email,
+      password: data.password,
     });
     return { error: "" };
   } catch (error) {
@@ -30,16 +34,9 @@ export async function login(_prevState: { error: string }, formData: FormData) {
   }
 }
 
-export async function register(
-  _prevState: { error: string },
-  formData: FormData,
-) {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
-  const name = formData.get("name") as string;
-  const companyName = formData.get("companyName") as string;
+export async function register(data: RegisterUser) {
+  const { email, password, name, companyName } = data;
   const companySlug = companyName.toLowerCase().replace(/\s+/g, "-");
-  const locale = (formData.get("locale") as string) || i18n.defaultLocale;
 
   // Check if user already exists
   const existingUser = await getUser(email);
@@ -85,6 +82,4 @@ export async function register(
     roleId: roleResult.role.id,
     customPermissions: [],
   });
-
-  redirect(`/${locale}/login`);
 }

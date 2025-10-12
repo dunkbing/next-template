@@ -44,7 +44,7 @@
   "users": {
     "title": "Utilisateurs",
     "description": "Gérer les utilisateurs de votre organisation",
-    "inviteUser": "Inviter un utilisateur",
+    "createUser": "Inviter un utilisateur",
     "table": {
       "name": "Nom",
       "email": "Email",

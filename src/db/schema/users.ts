@@ -36,9 +36,17 @@ export const insertUserSchema = createInsertSchema(users).omit({
   updatedAt: true,
 });
 
+export const loginUserSchema = z.object({
+  email: z.string().email("Invalid email"),
+  password: z.string().min(1, "Password is required"),
+});
+export type LoginUser = z.infer<typeof loginUserSchema>;
+
 export const registerUserSchema = z.object({
   email: z.string().email("Invalid email"),
-  password: z.string().min(1, "password is required"),
+  password: z.string().min(1, "Password is required"),
+  name: z.string().min(1, "Name is required"),
+  companyName: z.string().min(1, "Company name is required"),
 });
 export type RegisterUser = z.infer<typeof registerUserSchema>;
 
