@@ -29,9 +29,11 @@ type Product = {
 export default function ProductsTable({
   products,
   dict,
+  lang,
 }: {
   products: Product[];
   dict: Dictionary;
+  lang: string;
 }) {
   if (products.length === 0) {
     return (
@@ -74,7 +76,9 @@ export default function ProductsTable({
                     : `₫${minPrice.toLocaleString()} - ₫${maxPrice.toLocaleString()}`}
                 </TableCell>
                 <TableCell className="text-right space-x-2">
-                  <Link href={`/dashboard/catalog/products/${product.id}`}>
+                  <Link
+                    href={`/${lang}/dashboard/catalog/products/${product.id}`}
+                  >
                     <Button variant="ghost" size="sm">
                       <Pencil className="h-4 w-4" />
                     </Button>

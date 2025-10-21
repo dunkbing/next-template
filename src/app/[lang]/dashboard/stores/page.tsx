@@ -40,7 +40,7 @@ export default async function StoresPage({
         </Link>
       </div>
 
-      <StoresTable stores={stores} dict={dict} />
+      <StoresTable stores={stores} dict={dict} lang={lang} />
     </div>
   );
 }

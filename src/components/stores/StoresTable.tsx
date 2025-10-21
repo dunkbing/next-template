@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
+import Link from "next/link";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 
 type Store = {
@@ -23,9 +24,11 @@ type Store = {
 export default function StoresTable({
   stores,
   dict,
+  lang,
 }: {
   stores: Store[];
   dict: Dictionary;
+  lang: string;
 }) {
   if (stores.length === 0) {
     return (
@@ -57,9 +60,11 @@ export default function StoresTable({
               <TableCell>{store.address || "-"}</TableCell>
               <TableCell>{store.phone || "-"}</TableCell>
               <TableCell className="text-right">
-                <Button variant="ghost" size="sm">
-                  <Pencil className="h-4 w-4" />
-                </Button>
+                <Link href={`/${lang}/dashboard/stores/${store.id}`}>
+                  <Button variant="ghost" size="sm">
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                </Link>
               </TableCell>
             </TableRow>
           ))}

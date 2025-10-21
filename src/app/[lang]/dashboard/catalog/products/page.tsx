@@ -40,7 +40,7 @@ export default async function ProductsPage({
         </Link>
       </div>
 
-      <ProductsTable products={products} dict={dict} />
+      <ProductsTable products={products} dict={dict} lang={lang} />
     </div>
   );
 }

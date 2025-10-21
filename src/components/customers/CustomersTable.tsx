@@ -24,9 +24,11 @@ type Customer = {
 export default function CustomersTable({
   customers,
   dict,
+  lang,
 }: {
   customers: Customer[];
   dict: Dictionary;
+  lang: string;
 }) {
   if (customers.length === 0) {
     return (
@@ -58,7 +60,7 @@ export default function CustomersTable({
               <TableCell>{customer.phone || "-"}</TableCell>
               <TableCell>{customer.loyaltyPoints}</TableCell>
               <TableCell className="text-right space-x-2">
-                <Link href={`/dashboard/customers/${customer.id}`}>
+                <Link href={`/${lang}/dashboard/customers/${customer.id}`}>
                   <Button variant="ghost" size="sm">
                     <Pencil className="h-4 w-4" />
                   </Button>
