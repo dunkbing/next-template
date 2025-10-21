@@ -3,6 +3,7 @@ import {
   createMongoAbility,
   type MongoAbility,
 } from "@casl/ability";
+import type { Session } from "next-auth";
 
 // Define your application resources/subjects
 export type Subjects =
@@ -11,6 +12,20 @@ export type Subjects =
   | "Role"
   | "Dashboard"
   | "Settings"
+  | "Catalog"
+  | "Product"
+  | "Category"
+  | "Inventory"
+  | "PurchaseOrder"
+  | "Store"
+  | "Register"
+  | "Sale"
+  | "Customer"
+  | "Supplier"
+  | "SalesReport"
+  | "InventoryReport"
+  | "FinancialReport"
+  | "XZReport"
   | "all";
 
 // Define actions that can be performed
@@ -20,7 +35,13 @@ export type Actions =
   | "update"
   | "delete"
   | "manage" // can do everything
-  | "invite"; // custom action for inviting users
+  | "invite" // custom action for inviting users
+  | "adjust" // for inventory adjustments
+  | "transfer" // for inventory transfers
+  | "receive" // for receiving purchase orders
+  | "open" // for opening register
+  | "close" // for closing register
+  | "refund"; // for refunding sales
 
 // Define the Ability type
 export type AppAbility = MongoAbility<[Actions, Subjects]>;
@@ -49,4 +70,10 @@ export function getUserPermissions(
   // Custom permissions override role permissions
   const allPermissions = new Set([...rolePermissions, ...customPermissions]);
   return Array.from(allPermissions);
+}
+
+// Helper to build ability from session
+export function abilityFromSession(session: Session): AppAbility {
+  const permissions = session.user?.permissions || [];
+  return defineAbilityFor(permissions);
 }

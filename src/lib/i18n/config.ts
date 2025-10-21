@@ -1,6 +1,6 @@
 export const i18n = {
   defaultLocale: "en",
-  locales: ["en", "vi", "fr"],
+  locales: ["en", "vi"],
 } as const;
 
 export type Locale = (typeof i18n)["locales"][number];
@@ -8,5 +8,4 @@ export type Locale = (typeof i18n)["locales"][number];
 export const localeNames: Record<Locale, string> = {
   en: "English",
   vi: "Tiếng Việt",
-  fr: "Français",
 };

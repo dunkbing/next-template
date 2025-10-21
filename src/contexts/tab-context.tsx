@@ -34,9 +34,7 @@ const getTabName = (path: string): string => {
 
 export function TabProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const [tabs, setTabs] = useState<Tab[]>([
-    { path: "/dashboard", name: "Dashboard" },
-  ]);
+  const [tabs, setTabs] = useState<Tab[]>([]);
 
   // Add tab when pathname changes
   useEffect(() => {

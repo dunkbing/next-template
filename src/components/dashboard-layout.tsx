@@ -7,6 +7,12 @@ import {
   LogOut,
   Menu,
   Users,
+  ShoppingCart,
+  Package,
+  Warehouse,
+  Store,
+  UserCheck,
+  BarChart3,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -45,6 +51,36 @@ export function DashboardLayout({
       href: `/${lang}/dashboard`,
       icon: LayoutDashboard,
       isHome: true,
+    },
+    {
+      name: dict.pos.title,
+      href: `/${lang}/pos`,
+      icon: ShoppingCart,
+    },
+    {
+      name: dict.products.title,
+      href: `/${lang}/dashboard/catalog/products`,
+      icon: Package,
+    },
+    {
+      name: dict.inventory.title,
+      href: `/${lang}/dashboard/inventory`,
+      icon: Warehouse,
+    },
+    {
+      name: dict.customers.title,
+      href: `/${lang}/dashboard/customers`,
+      icon: UserCheck,
+    },
+    {
+      name: dict.stores.title,
+      href: `/${lang}/dashboard/stores`,
+      icon: Store,
+    },
+    {
+      name: dict.reports.title,
+      href: `/${lang}/dashboard/reports`,
+      icon: BarChart3,
     },
     {
       name: dict.users.title,

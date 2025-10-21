@@ -7,7 +7,6 @@ export type Dictionary = typeof import("./dictionaries/en.json");
 const dictionaries: Record<Locale, () => Promise<Dictionary>> = {
   en: () => import("./dictionaries/en.json").then((module) => module.default),
   vi: () => import("./dictionaries/vi.json").then((module) => module.default),
-  fr: () => import("./dictionaries/fr.json").then((module) => module.default),
 };
 
 export const getDictionary = async (locale: Locale): Promise<Dictionary> => {

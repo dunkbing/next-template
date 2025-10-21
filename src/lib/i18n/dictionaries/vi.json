@@ -62,5 +62,177 @@
   },
   "permissions": {
     "noPermission": "Bạn không có quyền truy cập tài nguyên này"
+  },
+  "pos": {
+    "title": "Bán hàng",
+    "cart": {
+      "title": "Đơn hàng hiện tại",
+      "empty": "Giỏ hàng trống",
+      "emptyDescription": "Quét mã hoặc tìm kiếm sản phẩm để thêm vào giỏ",
+      "item": "Sản phẩm",
+      "quantity": "SL",
+      "price": "Đơn giá",
+      "total": "Tổng",
+      "subtotal": "Tạm tính",
+      "tax": "Thuế",
+      "discount": "Giảm giá",
+      "grandTotal": "Tổng cộng",
+      "checkout": "Thanh toán",
+      "clear": "Xóa giỏ hàng"
+    },
+    "search": {
+      "placeholder": "Quét mã vạch hoặc tìm sản phẩm...",
+      "searching": "Đang tìm...",
+      "notFound": "Không tìm thấy sản phẩm"
+    },
+    "payment": {
+      "title": "Thanh toán",
+      "amount": "Số tiền thanh toán",
+      "method": "Phương thức thanh toán",
+      "cash": "Tiền mặt",
+      "card": "Thẻ",
+      "qr": "QR Code",
+      "bankTransfer": "Chuyển khoản",
+      "received": "Tiền khách đưa",
+      "change": "Tiền thừa",
+      "complete": "Hoàn tất thanh toán",
+      "processing": "Đang xử lý...",
+      "success": "Thanh toán thành công!",
+      "successMessage": "Giao dịch đã hoàn tất",
+      "close": "Đóng",
+      "addPayment": "Thêm thanh toán",
+      "totalPaid": "Đã thanh toán",
+      "remaining": "Còn lại"
+    }
+  },
+  "products": {
+    "title": "Sản phẩm",
+    "description": "Quản lý danh mục sản phẩm",
+    "createProduct": "Tạo sản phẩm",
+    "editProduct": "Sửa sản phẩm",
+    "list": "Danh sách sản phẩm",
+    "searchPlaceholder": "Tìm kiếm sản phẩm...",
+    "table": {
+      "name": "Tên sản phẩm",
+      "category": "Danh mục",
+      "variants": "Phiên bản",
+      "status": "Trạng thái",
+      "actions": "Hành động"
+    },
+    "form": {
+      "basicInfo": "Thông tin cơ bản",
+      "name": "Tên sản phẩm",
+      "namePlaceholder": "Nhập tên sản phẩm",
+      "description": "Mô tả",
+      "descriptionPlaceholder": "Nhập mô tả sản phẩm",
+      "category": "Danh mục",
+      "selectCategory": "Chọn danh mục",
+      "taxClass": "Loại thuế",
+      "status": "Trạng thái",
+      "active": "Hoạt động",
+      "inactive": "Tạm ngưng",
+      "variants": "Phiên bản sản phẩm",
+      "variantsDescription": "Thêm các phiên bản khác nhau của sản phẩm (kích cỡ, màu sắc, v.v.)",
+      "addVariant": "Thêm phiên bản",
+      "variant": "Phiên bản",
+      "sku": "Mã SKU",
+      "skuPlaceholder": "Nhập mã SKU",
+      "barcode": "Mã vạch",
+      "barcodePlaceholder": "Nhập mã vạch",
+      "price": "Giá bán",
+      "cost": "Giá vốn",
+      "compareAtPrice": "Giá so sánh",
+      "removeVariant": "Xóa phiên bản",
+      "creating": "Đang tạo...",
+      "create": "Tạo sản phẩm"
+    },
+    "status": {
+      "active": "Hoạt động",
+      "inactive": "Tạm ngưng"
+    }
+  },
+  "customers": {
+    "title": "Khách hàng",
+    "description": "Quản lý cơ sở dữ liệu khách hàng",
+    "createCustomer": "Tạo khách hàng",
+    "list": "Danh sách khách hàng",
+    "searchPlaceholder": "Tìm kiếm khách hàng...",
+    "table": {
+      "name": "Tên",
+      "email": "Email",
+      "phone": "Số điện thoại",
+      "loyaltyPoints": "Điểm tích lũy",
+      "actions": "Hành động"
+    },
+    "form": {
+      "personalInfo": "Thông tin cá nhân",
+      "name": "Họ và tên",
+      "namePlaceholder": "Nhập tên khách hàng",
+      "email": "Địa chỉ Email",
+      "emailPlaceholder": "khachhang@example.com",
+      "phone": "Số điện thoại",
+      "phonePlaceholder": "+84 123 456 789",
+      "address": "Địa chỉ",
+      "addressPlaceholder": "Nhập địa chỉ",
+      "loyaltyPoints": "Điểm tích lũy ban đầu",
+      "creating": "Đang tạo...",
+      "create": "Tạo khách hàng"
+    }
+  },
+  "stores": {
+    "title": "Cửa hàng",
+    "description": "Quản lý các chi nhánh cửa hàng",
+    "createStore": "Tạo cửa hàng",
+    "list": "Danh sách cửa hàng",
+    "table": {
+      "name": "Tên cửa hàng",
+      "code": "Mã",
+      "address": "Địa chỉ",
+      "phone": "Điện thoại",
+      "actions": "Hành động"
+    },
+    "form": {
+      "storeInfo": "Thông tin cửa hàng",
+      "name": "Tên cửa hàng",
+      "namePlaceholder": "Nhập tên cửa hàng",
+      "code": "Mã cửa hàng",
+      "codePlaceholder": "CH-001",
+      "address": "Địa chỉ",
+      "addressPlaceholder": "Nhập địa chỉ cửa hàng",
+      "phone": "Số điện thoại",
+      "phonePlaceholder": "+84 123 456 789",
+      "timezone": "múi giờ",
+      "creating": "Đang tạo...",
+      "create": "Tạo cửa hàng"
+    }
+  },
+  "inventory": {
+    "title": "Kho hàng",
+    "description": "Quản lý tồn kho và vận hành kho",
+    "stockLevels": "Tồn kho",
+    "stockLevelsDescription": "Xem và quản lý tồn kho tại các cửa hàng",
+    "purchaseOrders": "Đơn đặt hàng",
+    "purchaseOrdersDescription": "Tạo và quản lý đơn đặt hàng từ nhà cung cấp",
+    "suppliers": "Nhà cung cấp",
+    "suppliersDescription": "Quản lý danh sách nhà cung cấp",
+    "viewStockLevels": "Xem tồn kho",
+    "viewPurchaseOrders": "Xem đơn đặt hàng",
+    "viewSuppliers": "Xem nhà cung cấp"
+  },
+  "reports": {
+    "title": "Báo cáo",
+    "description": "Xem báo cáo bán hàng và tồn kho",
+    "salesSummary": "Tổng hợp bán hàng",
+    "salesSummaryDescription": "Xem tổng doanh thu, giao dịch và hiệu suất",
+    "inventoryValuation": "Giá trị tồn kho",
+    "inventoryValuationDescription": "Xem tổng giá trị tồn kho tại các cửa hàng",
+    "topProducts": "Sản phẩm bán chạy",
+    "topProductsDescription": "Xem sản phẩm bán chạy nhất",
+    "lowStock": "Cảnh báo hết hàng",
+    "lowStockDescription": "Sản phẩm cần nhập thêm",
+    "viewSalesReport": "Xem báo cáo bán hàng",
+    "viewInventoryReport": "Xem báo cáo tồn kho",
+    "viewTopProducts": "Xem sản phẩm bán chạy",
+    "viewLowStock": "Xem hàng sắp hết"
   }
 }

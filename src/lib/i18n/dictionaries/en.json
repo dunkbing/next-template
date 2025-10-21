@@ -62,5 +62,177 @@
   },
   "permissions": {
     "noPermission": "You don't have permission to access this resource"
+  },
+  "pos": {
+    "title": "Point of Sale",
+    "cart": {
+      "title": "Current Sale",
+      "empty": "Cart is empty",
+      "emptyDescription": "Scan or search for products to add to cart",
+      "item": "Item",
+      "quantity": "Qty",
+      "price": "Price",
+      "total": "Total",
+      "subtotal": "Subtotal",
+      "tax": "Tax",
+      "discount": "Discount",
+      "grandTotal": "Grand Total",
+      "checkout": "Checkout",
+      "clear": "Clear Cart"
+    },
+    "search": {
+      "placeholder": "Scan barcode or search product...",
+      "searching": "Searching...",
+      "notFound": "Product not found"
+    },
+    "payment": {
+      "title": "Payment",
+      "amount": "Amount to Pay",
+      "method": "Payment Method",
+      "cash": "Cash",
+      "card": "Card",
+      "qr": "QR Code",
+      "bankTransfer": "Bank Transfer",
+      "received": "Amount Received",
+      "change": "Change",
+      "complete": "Complete Sale",
+      "processing": "Processing...",
+      "success": "Sale Completed!",
+      "successMessage": "Transaction completed successfully",
+      "close": "Close",
+      "addPayment": "Add Payment",
+      "totalPaid": "Total Paid",
+      "remaining": "Remaining"
+    }
+  },
+  "products": {
+    "title": "Products",
+    "description": "Manage your product catalog",
+    "createProduct": "Create Product",
+    "editProduct": "Edit Product",
+    "list": "Product List",
+    "searchPlaceholder": "Search products...",
+    "table": {
+      "name": "Product Name",
+      "category": "Category",
+      "variants": "Variants",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "form": {
+      "basicInfo": "Basic Information",
+      "name": "Product Name",
+      "namePlaceholder": "Enter product name",
+      "description": "Description",
+      "descriptionPlaceholder": "Enter product description",
+      "category": "Category",
+      "selectCategory": "Select category",
+      "taxClass": "Tax Class",
+      "status": "Status",
+      "active": "Active",
+      "inactive": "Inactive",
+      "variants": "Product Variants",
+      "variantsDescription": "Add different variants of this product (size, color, etc.)",
+      "addVariant": "Add Variant",
+      "variant": "Variant",
+      "sku": "SKU",
+      "skuPlaceholder": "Enter SKU",
+      "barcode": "Barcode",
+      "barcodePlaceholder": "Enter barcode",
+      "price": "Price",
+      "cost": "Cost",
+      "compareAtPrice": "Compare at Price",
+      "removeVariant": "Remove Variant",
+      "creating": "Creating...",
+      "create": "Create Product"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    }
+  },
+  "customers": {
+    "title": "Customers",
+    "description": "Manage your customer database",
+    "createCustomer": "Create Customer",
+    "list": "Customer List",
+    "searchPlaceholder": "Search customers...",
+    "table": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "loyaltyPoints": "Loyalty Points",
+      "actions": "Actions"
+    },
+    "form": {
+      "personalInfo": "Personal Information",
+      "name": "Full Name",
+      "namePlaceholder": "Enter customer name",
+      "email": "Email Address",
+      "emailPlaceholder": "customer@example.com",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+84 123 456 789",
+      "address": "Address",
+      "addressPlaceholder": "Enter address",
+      "loyaltyPoints": "Initial Loyalty Points",
+      "creating": "Creating...",
+      "create": "Create Customer"
+    }
+  },
+  "stores": {
+    "title": "Stores",
+    "description": "Manage your store locations",
+    "createStore": "Create Store",
+    "list": "Store List",
+    "table": {
+      "name": "Store Name",
+      "code": "Code",
+      "address": "Address",
+      "phone": "Phone",
+      "actions": "Actions"
+    },
+    "form": {
+      "storeInfo": "Store Information",
+      "name": "Store Name",
+      "namePlaceholder": "Enter store name",
+      "code": "Store Code",
+      "codePlaceholder": "STORE-001",
+      "address": "Address",
+      "addressPlaceholder": "Enter store address",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+84 123 456 789",
+      "timezone": "Timezone",
+      "creating": "Creating...",
+      "create": "Create Store"
+    }
+  },
+  "inventory": {
+    "title": "Inventory",
+    "description": "Manage stock levels and inventory operations",
+    "stockLevels": "Stock Levels",
+    "stockLevelsDescription": "View and manage current stock levels across all stores",
+    "purchaseOrders": "Purchase Orders",
+    "purchaseOrdersDescription": "Create and manage purchase orders from suppliers",
+    "suppliers": "Suppliers",
+    "suppliersDescription": "Manage your supplier database",
+    "viewStockLevels": "View Stock Levels",
+    "viewPurchaseOrders": "View Purchase Orders",
+    "viewSuppliers": "View Suppliers"
+  },
+  "reports": {
+    "title": "Reports",
+    "description": "View sales and inventory reports",
+    "salesSummary": "Sales Summary",
+    "salesSummaryDescription": "View total sales, transactions, and performance metrics",
+    "inventoryValuation": "Inventory Valuation",
+    "inventoryValuationDescription": "View total inventory value across all stores",
+    "topProducts": "Top Products",
+    "topProductsDescription": "See your best-selling products",
+    "lowStock": "Low Stock Alerts",
+    "lowStockDescription": "Products that need reordering",
+    "viewSalesReport": "View Sales Report",
+    "viewInventoryReport": "View Inventory Report",
+    "viewTopProducts": "View Top Products",
+    "viewLowStock": "View Low Stock"
   }
 }
