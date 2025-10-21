@@ -1,13 +1,9 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { AuthError } from "next-auth";
 import { signIn, signOut } from "@/lib/auth";
 import { i18n } from "@/lib/i18n/config";
-import {
-  type LoginUser,
-  type RegisterUser,
-} from "@/db/schema/users";
+import { type LoginUser, type RegisterUser } from "@/db/schema/users";
 import { createRole, getAvailablePermissions } from "./roles";
 import { createTenant, getTenantBySlug } from "./tenants";
 import { createUser, getUser } from "./users";

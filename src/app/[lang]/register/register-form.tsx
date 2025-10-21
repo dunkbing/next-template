@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "@tanstack/react-form";
+import { useForm, useStore } from "@tanstack/react-form";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { register } from "@/app/actions/auth";
@@ -20,7 +20,7 @@ import { FieldError } from "@/components/ui/field";
 import type { Locale } from "@/lib/i18n/config";
 import { registerUserSchema } from "@/db/schema/users";
 import { Dictionary } from "@/lib/i18n/get-dictionary";
-import { redirect } from 'next/navigation'
+import { redirect } from "next/navigation";
 
 export default function RegisterForm({
   dict,
@@ -51,6 +51,7 @@ export default function RegisterForm({
       }
     },
   });
+  const isSubmitting = useStore(form.store, (state) => state.isSubmitting);
 
   return (
     <div className="flex h-screen w-screen items-center justify-center">
@@ -93,7 +94,7 @@ export default function RegisterForm({
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
-                      disabled={form.state.isSubmitting}
+                      disabled={isSubmitting}
                       aria-invalid={
                         field.state.meta.errors.length > 0 ? "true" : "false"
                       }
@@ -126,7 +127,7 @@ export default function RegisterForm({
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
-                      disabled={form.state.isSubmitting}
+                      disabled={isSubmitting}
                       aria-invalid={
                         field.state.meta.errors.length > 0 ? "true" : "false"
                       }
@@ -160,7 +161,7 @@ export default function RegisterForm({
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
-                      disabled={form.state.isSubmitting}
+                      disabled={isSubmitting}
                       aria-invalid={
                         field.state.meta.errors.length > 0 ? "true" : "false"
                       }
@@ -192,7 +193,7 @@ export default function RegisterForm({
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
-                      disabled={form.state.isSubmitting}
+                      disabled={isSubmitting}
                       aria-invalid={
                         field.state.meta.errors.length > 0 ? "true" : "false"
                       }
@@ -207,12 +208,8 @@ export default function RegisterForm({
             />
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={form.state.isSubmitting}
-            >
-              {form.state.isSubmitting ? (
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   {dict.auth.register.button}...

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "@tanstack/react-form";
+import { useForm, useStore } from "@tanstack/react-form";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { login } from "@/app/actions/auth";
@@ -39,7 +39,6 @@ export default function LoginForm({
     validators: { onSubmit: loginUserSchema },
     onSubmit: async ({ value }) => {
       setError("");
-      console.log("submitting", form.state.isSubmitting);
 
       const result = await login(value);
 
@@ -50,7 +49,7 @@ export default function LoginForm({
       }
     },
   });
-  console.log(form.state.isSubmitting);
+  const isSubmitting = useStore(form.store, (state) => state.isSubmitting);
 
   return (
     <div className="flex h-screen w-screen items-center justify-center">
@@ -140,11 +139,8 @@ export default function LoginForm({
             />
           </CardContent>
           <CardFooter className="flex flex-col space-y-4 mt-4">
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={form.state.isSubmitting}
-            >
+            submitting {String(isSubmitting)}
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
               {form.state.isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
