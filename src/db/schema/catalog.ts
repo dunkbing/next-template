@@ -2,6 +2,7 @@ import { relations } from "drizzle-orm";
 import {
   boolean,
   integer,
+  jsonb,
   numeric,
   pgTable,
   text,
@@ -47,7 +48,8 @@ export const products = pgTable("products", {
   categoryId: integer("category_id").references(() => categories.id, {
     onDelete: "set null",
   }),
-  taxClass: varchar({ length: 50 }).notNull().default("standard"),
+  images: jsonb().$type<string[]>().default([]),
+  taxClass: varchar("tax_class", { length: 50 }).notNull().default("standard"),
   trackStock: boolean("track_stock").notNull().default(true),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),

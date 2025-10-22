@@ -13,6 +13,7 @@ import {
   Store,
   UserCheck,
   BarChart3,
+  Receipt,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -78,6 +79,11 @@ export function DashboardLayout({
       icon: Store,
     },
     {
+      name: dict.sales.title,
+      href: `/${lang}/dashboard/sales`,
+      icon: Receipt,
+    },
+    {
       name: dict.reports.title,
       href: `/${lang}/dashboard/reports`,
       icon: BarChart3,
@@ -113,8 +119,8 @@ export function DashboardLayout({
           </Button>
         </div>
         <nav className="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
-          {navigation.map((item) => (
-            <div key={item.name}>
+          {navigation.map((item, i) => (
+            <div key={item.name + i}>
               <button
                 onClick={() => router.push(item.href)}
                 className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md hover:bg-accent transition-colors"

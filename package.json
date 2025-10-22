@@ -7,7 +7,8 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "biome check",
-    "format": "biome format --write"
+    "format": "biome format --write",
+    "db:seed": "bun run scripts/seed.ts"
   },
   "dependencies": {
     "@auth/core": "^0.41.0",

@@ -1,13 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { createProduct, createVariant } from "@/app/actions/catalog";
+import {
+  createProduct,
+  createVariant,
+  uploadImage,
+  deleteImage,
+} from "@/app/actions/catalog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, Plus, X } from "lucide-react";
+import { Loader2, Plus, X, Upload, Image as ImageIcon } from "lucide-react";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
+import type { SelectProduct, SelectProductVariant } from "@/db/schema";
+import Image from "next/image";
 
 type Variant = {
   id: string;
@@ -18,19 +25,28 @@ type Variant = {
   cost: string;
 };
 
+type ProductWithVariants = SelectProduct & {
+  variants: SelectProductVariant[];
+};
+
 export default function ProductForm({
   dict,
   lang,
+  product,
 }: {
   dict: Dictionary;
   lang: string;
+  product?: ProductWithVariants | null;
 }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [images, setImages] = useState<string[]>([]);
+  const [uploadingImages, setUploadingImages] = useState(false);
   const [variants, setVariants] = useState<Variant[]>([
     {
       id: crypto.randomUUID(),
@@ -41,6 +57,31 @@ export default function ProductForm({
       cost: "",
     },
   ]);
+
+  // Load product data when editing
+  useEffect(() => {
+    if (product) {
+      setName(product.name);
+      setDescription(product.description || "");
+
+      // Convert URLs to the new format (extract key from URL if needed)
+      const productImages = (product.images as string[]) || [];
+      setImages(productImages);
+
+      if (product.variants && product.variants.length > 0) {
+        setVariants(
+          product.variants.map((v) => ({
+            id: v.id.toString(),
+            sku: v.sku,
+            barcode: v.barcode || "",
+            name: v.name,
+            price: v.price,
+            cost: v.cost,
+          })),
+        );
+      }
+    }
+  }, [product]);
 
   const addVariant = () => {
     setVariants([
@@ -66,6 +107,65 @@ export default function ProductForm({
     );
   };
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploadingImages(true);
+    setError("");
+
+    try {
+      const uploadedImages: { url: string; key: string }[] = [];
+
+      for (const file of Array.from(files)) {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("folder", "products");
+
+        const result = await uploadImage(formData);
+
+        if ("error" in result) {
+          throw new Error(result.error);
+        }
+
+        if ("data" in result) {
+          uploadedImages.push({
+            url: result.data.url,
+            key: result.data.key,
+          });
+        }
+      }
+
+      setImages([...images, ...uploadedImages]);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to upload images");
+    } finally {
+      setUploadingImages(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
+
+  const removeImage = async (index: number) => {
+    const imageToRemove = images[index];
+
+    try {
+      // Delete from S3
+      const result = await deleteImage(imageToRemove.key);
+
+      if ("error" in result) {
+        setError(result.error || "");
+        return;
+      }
+
+      // Remove from local state
+      setImages(images.filter((_, i) => i !== index));
+    } catch (err) {
+      setError("Failed to delete image");
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -76,6 +176,7 @@ export default function ProductForm({
       const productResult = await createProduct({
         name,
         description,
+        images: images.map((img) => img.url),
         trackStock: true,
         taxClass: "standard",
       });
@@ -141,6 +242,64 @@ export default function ProductForm({
             onChange={(e) => setDescription(e.target.value)}
             placeholder={dict.products.form.descriptionPlaceholder}
           />
+        </div>
+
+        {/* Image Upload */}
+        <div>
+          <Label>Product Images</Label>
+          <div className="space-y-3">
+            <div className="flex gap-3 flex-wrap">
+              {images.map((image, index) => (
+                <div
+                  key={index}
+                  className="relative w-24 h-24 border rounded-lg overflow-hidden group"
+                >
+                  <Image
+                    src={image}
+                    alt={`Product image ${index + 1}`}
+                    fill
+                    className="object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeImage(index)}
+                    className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+              ))}
+
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploadingImages}
+                className="w-24 h-24 border-2 border-dashed rounded-lg flex flex-col items-center justify-center hover:bg-gray-50 transition-colors"
+              >
+                {uploadingImages ? (
+                  <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+                ) : (
+                  <>
+                    <Upload className="h-6 w-6 text-gray-400" />
+                    <span className="text-xs text-gray-500 mt-1">Upload</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              multiple
+              onChange={handleImageUpload}
+              className="hidden"
+            />
+
+            <p className="text-xs text-gray-500">
+              Upload product images (JPEG, PNG, WebP, GIF). Max 5MB per file.
+            </p>
+          </div>
         </div>
       </div>
 

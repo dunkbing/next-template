@@ -1,4 +1,5 @@
-import { drizzle } from "drizzle-orm/bun-sql";
+import { drizzle } from "drizzle-orm/node-postgres";
+import { Pool } from "pg";
 import { configs } from "@/lib/configs";
 import { roles, rolesRelations } from "./schema/roles";
 import { tenants, tenantsRelations } from "./schema/tenants";
@@ -37,10 +38,12 @@ import {
   returnsRelations,
 } from "./schema/sales";
 
-const client = new Bun.SQL(configs.databaseUrl);
+const pool = new Pool({
+  connectionString: configs.databaseUrl,
+});
 
 export const db = drizzle({
-  client,
+  client: pool,
   schema: {
     users,
     usersRelations,

@@ -234,5 +234,122 @@
     "viewInventoryReport": "View Inventory Report",
     "viewTopProducts": "View Top Products",
     "viewLowStock": "View Low Stock"
+  },
+  "sales": {
+    "title": "Sales",
+    "description": "Manage customer sales and orders",
+    "createOrder": "Create Order",
+    "editOrder": "Edit Order",
+    "orderDetails": "Order Details",
+    "list": "Order List",
+    "searchPlaceholder": "Search orders...",
+    "table": {
+      "orderNumber": "Order #",
+      "customer": "Customer",
+      "store": "Store",
+      "status": "Status",
+      "paymentStatus": "Payment Status",
+      "total": "Total",
+      "date": "Date",
+      "actions": "Actions"
+    },
+    "form": {
+      "orderInfo": "Order Information",
+      "customer": "Customer",
+      "selectCustomer": "Select customer",
+      "store": "Store",
+      "selectStore": "Select store",
+      "orderType": "Order Type",
+      "source": "Source",
+      "notes": "Notes",
+      "notesPlaceholder": "Internal notes about this order",
+      "customerNotes": "Customer Notes",
+      "customerNotesPlaceholder": "Notes from customer",
+      "items": "Order Items",
+      "addItem": "Add Item",
+      "removeItem": "Remove Item",
+      "creating": "Creating...",
+      "create": "Create Order",
+      "updating": "Updating...",
+      "update": "Update Order"
+    },
+    "status": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "inProgress": "In Progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "paymentStatus": {
+      "unpaid": "Unpaid",
+      "partial": "Partially Paid",
+      "paid": "Paid",
+      "refunded": "Refunded"
+    },
+    "orderType": {
+      "sale": "Sale",
+      "purchase": "Purchase",
+      "transfer": "Transfer"
+    },
+    "source": {
+      "pos": "POS",
+      "online": "Online",
+      "phone": "Phone",
+      "manual": "Manual"
+    },
+    "filters": {
+      "all": "All Orders",
+      "status": "Filter by Status",
+      "paymentStatus": "Filter by Payment",
+      "dateRange": "Date Range",
+      "from": "From",
+      "to": "To",
+      "apply": "Apply Filters",
+      "clear": "Clear Filters"
+    },
+    "details": {
+      "orderNumber": "Order Number",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At",
+      "createdBy": "Created By",
+      "customer": "Customer",
+      "store": "Store",
+      "status": "Status",
+      "paymentStatus": "Payment Status",
+      "items": "Items",
+      "product": "Product",
+      "variant": "Variant",
+      "quantity": "Quantity",
+      "price": "Price",
+      "discount": "Discount",
+      "tax": "Tax",
+      "lineTotal": "Line Total",
+      "subtotal": "Subtotal",
+      "taxTotal": "Total Tax",
+      "discountTotal": "Total Discount",
+      "shippingFee": "Shipping Fee",
+      "grandTotal": "Grand Total",
+      "statusHistory": "Status History",
+      "changedBy": "Changed By",
+      "date": "Date",
+      "notes": "Notes"
+    },
+    "actions": {
+      "updateStatus": "Update Status",
+      "updatePaymentStatus": "Update Payment Status",
+      "cancel": "Cancel Order",
+      "cancelConfirm": "Are you sure you want to cancel this order?",
+      "convertToSale": "Convert to Sale",
+      "print": "Print Order"
+    },
+    "stats": {
+      "totalOrders": "Total Orders",
+      "totalRevenue": "Total Revenue",
+      "pending": "Pending",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "unpaid": "Unpaid",
+      "paid": "Paid"
+    }
   }
 }

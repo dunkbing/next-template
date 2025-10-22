@@ -16,6 +16,12 @@ import {
   type Subjects,
 } from "@/lib/casl/ability";
 import { PERMISSIONS } from "@/lib/permissions";
+import {
+  s3Client,
+  generateFileName,
+  getPublicUrl,
+  getSignedUrl,
+} from "@/lib/s3";
 import { eq, and, like, desc } from "drizzle-orm";
 import { z } from "zod";
 
@@ -140,6 +146,7 @@ const productSchema = z.object({
   name: z.string().min(1, "Name is required"),
   description: z.string().optional(),
   categoryId: z.number().int().positive().optional(),
+  images: z.array(z.string()).optional(),
   taxClass: z.string().default("standard"),
   trackStock: z.boolean().default(true),
 });
@@ -226,6 +233,9 @@ export async function getProduct(id: number) {
 
     if (!product) {
       return { error: "Product not found" } as const;
+    }
+    if (product.images?.length) {
+      product.images = product.images.map((p) => getSignedUrl(p));
     }
 
     return { data: product } as const;
@@ -444,5 +454,79 @@ export async function deleteVariant(id: number) {
   } catch (error) {
     console.error("Delete variant error:", error);
     return { error: "Failed to delete variant" } as const;
+  }
+}
+
+// ============= IMAGE UPLOADS =============
+
+export async function uploadImage(formData: FormData) {
+  const auth = await getAuthorizedSession(PERMISSIONS.PRODUCT_CREATE);
+  if ("error" in auth) return auth;
+
+  try {
+    const file = formData.get("file");
+    const folder = (formData.get("folder") as string) || "products";
+
+    if (!file || !(file instanceof File)) {
+      return { error: "No file provided" } as const;
+    }
+
+    // Validate file type
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+    if (!allowedTypes.includes(file.type)) {
+      return {
+        error: "Invalid file type. Only JPEG, PNG, WebP, and GIF are allowed",
+      } as const;
+    }
+
+    // Validate file size (max 5MB)
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      return { error: "File too large. Maximum size is 5MB" } as const;
+    }
+
+    // Generate unique file name
+    const fileName = generateFileName(file.name);
+    const key = `${folder}/${fileName}`;
+
+    // Upload to S3 using Bun's native API
+    const s3File = s3Client.file(key);
+    await s3File.write(file, { type: file.type });
+
+    // Get public URL
+    const url = getPublicUrl(key);
+
+    return {
+      data: {
+        url,
+        key,
+        fileName: file.name,
+        size: file.size,
+        type: file.type,
+      },
+    } as const;
+  } catch (error) {
+    console.error("Image upload error:", error);
+    return { error: "Failed to upload image" } as const;
+  }
+}
+
+export async function deleteImage(key: string) {
+  const auth = await getAuthorizedSession(PERMISSIONS.PRODUCT_DELETE);
+  if ("error" in auth) return auth;
+
+  try {
+    if (!key) {
+      return { error: "No key provided" } as const;
+    }
+
+    // Delete from S3 using Bun's native API
+    const s3File = s3Client.file(key);
+    await s3File.unlink();
+
+    return { success: true } as const;
+  } catch (error) {
+    console.error("Image delete error:", error);
+    return { error: "Failed to delete image" } as const;
   }
 }

@@ -234,5 +234,122 @@
     "viewInventoryReport": "Xem báo cáo tồn kho",
     "viewTopProducts": "Xem sản phẩm bán chạy",
     "viewLowStock": "Xem hàng sắp hết"
+  },
+  "sales": {
+    "title": "Bán hàng",
+    "description": "Quản lý hóa đơn và đơn hàng",
+    "createOrder": "Tạo đơn hàng",
+    "editOrder": "Sửa đơn hàng",
+    "orderDetails": "Chi tiết đơn hàng",
+    "list": "Danh sách đơn hàng",
+    "searchPlaceholder": "Tìm đơn hàng...",
+    "table": {
+      "orderNumber": "Mã đơn",
+      "customer": "Khách hàng",
+      "store": "Cửa hàng",
+      "status": "Trạng thái",
+      "paymentStatus": "TT Thanh toán",
+      "total": "Tổng tiền",
+      "date": "Ngày",
+      "actions": "Thao tác"
+    },
+    "form": {
+      "orderInfo": "Thông tin đơn hàng",
+      "customer": "Khách hàng",
+      "selectCustomer": "Chọn khách hàng",
+      "store": "Cửa hàng",
+      "selectStore": "Chọn cửa hàng",
+      "orderType": "Loại đơn",
+      "source": "Nguồn",
+      "notes": "Ghi chú",
+      "notesPlaceholder": "Ghi chú nội bộ về đơn hàng này",
+      "customerNotes": "Ghi chú khách hàng",
+      "customerNotesPlaceholder": "Ghi chú từ khách hàng",
+      "items": "Sản phẩm",
+      "addItem": "Thêm sản phẩm",
+      "removeItem": "Xóa sản phẩm",
+      "creating": "Đang tạo...",
+      "create": "Tạo đơn hàng",
+      "updating": "Đang cập nhật...",
+      "update": "Cập nhật đơn hàng"
+    },
+    "status": {
+      "pending": "Chờ xử lý",
+      "confirmed": "Đã xác nhận",
+      "inProgress": "Đang xử lý",
+      "completed": "Hoàn thành",
+      "cancelled": "Đã hủy"
+    },
+    "paymentStatus": {
+      "unpaid": "Chưa thanh toán",
+      "partial": "Thanh toán 1 phần",
+      "paid": "Đã thanh toán",
+      "refunded": "Đã hoàn tiền"
+    },
+    "orderType": {
+      "sale": "Bán hàng",
+      "purchase": "Mua hàng",
+      "transfer": "Chuyển kho"
+    },
+    "source": {
+      "pos": "POS",
+      "online": "Online",
+      "phone": "Điện thoại",
+      "manual": "Thủ công"
+    },
+    "filters": {
+      "all": "Tất cả đơn hàng",
+      "status": "Lọc theo trạng thái",
+      "paymentStatus": "Lọc theo thanh toán",
+      "dateRange": "Khoảng thời gian",
+      "from": "Từ ngày",
+      "to": "Đến ngày",
+      "apply": "Áp dụng",
+      "clear": "Xóa bộ lọc"
+    },
+    "details": {
+      "orderNumber": "Mã đơn hàng",
+      "createdAt": "Ngày tạo",
+      "updatedAt": "Cập nhật lần cuối",
+      "createdBy": "Người tạo",
+      "customer": "Khách hàng",
+      "store": "Cửa hàng",
+      "status": "Trạng thái",
+      "paymentStatus": "Trạng thái thanh toán",
+      "items": "Sản phẩm",
+      "product": "Sản phẩm",
+      "variant": "Phiên bản",
+      "quantity": "Số lượng",
+      "price": "Đơn giá",
+      "discount": "Giảm giá",
+      "tax": "Thuế",
+      "lineTotal": "Thành tiền",
+      "subtotal": "Tạm tính",
+      "taxTotal": "Tổng thuế",
+      "discountTotal": "Tổng giảm giá",
+      "shippingFee": "Phí vận chuyển",
+      "grandTotal": "Tổng cộng",
+      "statusHistory": "Lịch sử trạng thái",
+      "changedBy": "Người thay đổi",
+      "date": "Ngày",
+      "notes": "Ghi chú"
+    },
+    "actions": {
+      "updateStatus": "Cập nhật trạng thái",
+      "updatePaymentStatus": "Cập nhật TT thanh toán",
+      "cancel": "Hủy đơn hàng",
+      "cancelConfirm": "Bạn có chắc muốn hủy đơn hàng này?",
+      "convertToSale": "Chuyển thành hóa đơn",
+      "print": "In đơn hàng"
+    },
+    "stats": {
+      "totalOrders": "Tổng đơn hàng",
+      "totalRevenue": "Tổng doanh thu",
+      "pending": "Chờ xử lý",
+      "completed": "Hoàn thành",
+      "cancelled": "Đã hủy",
+      "unpaid": "Chưa thanh toán",
+      "paid": "Đã thanh toán"
+    }
   }
 }
