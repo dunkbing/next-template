@@ -36,23 +36,25 @@ export default function SalesTable({
     };
     return (
       <Badge variant={variants[status] || "secondary"}>
-        {dict.sales.status[status.toLowerCase() as keyof typeof dict.sales.status] || status}
+        {dict.sales.status[
+          status.toLowerCase() as keyof typeof dict.sales.status
+        ] || status}
       </Badge>
     );
   };
 
   const formatDate = (date: Date) => {
-    return new Date(date).toLocaleDateString('vi-VN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
+    return new Date(date).toLocaleDateString("vi-VN", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
   const formatCurrency = (amount: string | number) => {
-    return Number(amount).toLocaleString('vi-VN') + ' ₫';
+    return Number(amount).toLocaleString("vi-VN") + " ₫";
   };
 
   if (sales.length === 0) {
@@ -73,7 +75,9 @@ export default function SalesTable({
             <TableHead>{dict.sales.table.store}</TableHead>
             <TableHead>Cashier</TableHead>
             <TableHead>{dict.sales.table.status}</TableHead>
-            <TableHead className="text-right">{dict.sales.table.total}</TableHead>
+            <TableHead className="text-right">
+              {dict.sales.table.total}
+            </TableHead>
             <TableHead>{dict.sales.table.date}</TableHead>
           </TableRow>
         </TableHeader>
@@ -92,7 +96,9 @@ export default function SalesTable({
                 {sale.customer ? (
                   <div>
                     <div className="font-medium">{sale.customer.name}</div>
-                    <div className="text-sm text-gray-500">{sale.customer.phone}</div>
+                    <div className="text-sm text-gray-500">
+                      {sale.customer.phone}
+                    </div>
                   </div>
                 ) : (
                   <span className="text-gray-400">Walk-in</span>

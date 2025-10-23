@@ -3,8 +3,10 @@
 import { db } from "@/db";
 import {
   categories,
+  insertProductSchema,
   products,
   productVariants,
+  ProductWithRelations,
   type InsertCategory,
   type InsertProduct,
   type InsertProductVariant,
@@ -140,32 +142,22 @@ export async function deleteCategory(id: number) {
   }
 }
 
-// ============= PRODUCTS =============
-
-const productSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  description: z.string().optional(),
-  categoryId: z.number().int().positive().optional(),
-  images: z.array(z.string()).optional(),
-  taxClass: z.string().default("standard"),
-  trackStock: z.boolean().default(true),
-});
-
-export async function createProduct(input: z.infer<typeof productSchema>) {
+export async function createProduct(input: InsertProduct) {
+  console.log({ input });
   const auth = await getAuthorizedSession(PERMISSIONS.PRODUCT_CREATE);
-  if ("error" in auth) return auth;
-
-  const validated = productSchema.safeParse(input);
-  if (!validated.success) {
-    return { error: validated.error.issues[0].message } as const;
-  }
+  if (auth.error) return { error: auth.error };
 
   try {
+    const validated = insertProductSchema.safeParse(input);
+    console.log({ validated });
+    if (!validated.success) {
+      return { error: validated.error.issues[0].message } as const;
+    }
     const [product] = await db
       .insert(products)
       .values({
-        tenantId: auth.tenantId,
         ...validated.data,
+        tenantId: auth.tenantId,
       })
       .returning();
 
@@ -214,7 +206,9 @@ export async function listProducts(params?: {
   }
 }
 
-export async function getProduct(id: number) {
+export async function getProduct(
+  id: number,
+): Promise<{ error?: string; data?: ProductWithRelations }> {
   const auth = await getAuthorizedSession(PERMISSIONS.PRODUCT_READ);
   if ("error" in auth) return auth;
 
@@ -234,8 +228,11 @@ export async function getProduct(id: number) {
     if (!product) {
       return { error: "Product not found" } as const;
     }
-    if (product.images?.length) {
-      product.images = product.images.map((p) => getSignedUrl(p));
+    if (product.s3Keys?.length) {
+      (product as ProductWithRelations).images = product.s3Keys.map((p) => ({
+        key: p,
+        url: getSignedUrl(p),
+      }));
     }
 
     return { data: product } as const;
@@ -245,10 +242,7 @@ export async function getProduct(id: number) {
   }
 }
 
-export async function updateProduct(
-  id: number,
-  input: Partial<z.infer<typeof productSchema>>,
-) {
+export async function updateProduct(id: number, input: Partial<InsertProduct>) {
   const auth = await getAuthorizedSession(PERMISSIONS.PRODUCT_UPDATE);
   if ("error" in auth) return auth;
 
@@ -459,13 +453,12 @@ export async function deleteVariant(id: number) {
 
 // ============= IMAGE UPLOADS =============
 
-export async function uploadImage(formData: FormData) {
+export async function uploadImage(id: number, formData: FormData) {
   const auth = await getAuthorizedSession(PERMISSIONS.PRODUCT_CREATE);
-  if ("error" in auth) return auth;
+  if (auth.error) return { error: auth.error };
 
   try {
     const file = formData.get("file");
-    const folder = (formData.get("folder") as string) || "products";
 
     if (!file || !(file instanceof File)) {
       return { error: "No file provided" } as const;
@@ -485,16 +478,14 @@ export async function uploadImage(formData: FormData) {
       return { error: "File too large. Maximum size is 5MB" } as const;
     }
 
-    // Generate unique file name
-    const fileName = generateFileName(file.name);
-    const key = `${folder}/${fileName}`;
+    const key = `products/${id}/${file.name}`;
 
     // Upload to S3 using Bun's native API
     const s3File = s3Client.file(key);
     await s3File.write(file, { type: file.type });
 
     // Get public URL
-    const url = getPublicUrl(key);
+    const url = getSignedUrl(key);
 
     return {
       data: {
