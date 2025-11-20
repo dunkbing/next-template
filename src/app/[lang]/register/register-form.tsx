@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FieldError } from "@/components/ui/field";
 import type { Locale } from "@/lib/i18n/config";
-import { registerUserSchema } from "@/db/schema/users";
+import { registerUserSchema } from "@/db/schema/auth";
 import { Dictionary } from "@/lib/i18n/get-dictionary";
 import { redirect } from "next/navigation";
 

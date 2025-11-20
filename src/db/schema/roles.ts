@@ -7,7 +7,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { tenants } from "./tenants";
-import { users } from "./users";
+import { user } from "./auth";
 
 export const roles = pgTable("roles", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -26,7 +26,7 @@ export const rolesRelations = relations(roles, ({ one, many }) => ({
     fields: [roles.tenantId],
     references: [tenants.id],
   }),
-  users: many(users),
+  users: many(user),
 }));
 
 export type SelectRole = typeof roles.$inferSelect;

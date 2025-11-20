@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import {
   Card,
   CardContent,
@@ -16,7 +17,11 @@ export default async function DashboardPage({
 }) {
   const { lang } = await params;
   const dict = await getDictionary(lang as Locale);
-  const session = await auth();
+
+  // Get session using Better Auth
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
   return (
     <div className="space-y-6">
@@ -24,7 +29,7 @@ export default async function DashboardPage({
         <h1 className="text-3xl font-bold">{dict.dashboard.title}</h1>
         <p className="text-muted-foreground">
           {interpolate(dict.dashboard.welcome, {
-            name: session?.user?.email || "User",
+            name: session?.user?.name || session?.user?.email || "User",
           })}
         </p>
       </div>

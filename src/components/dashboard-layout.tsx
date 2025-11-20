@@ -9,12 +9,12 @@ import {
   Users,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { handleSignOut } from "@/app/actions/auth";
 import { Button } from "@/components/ui/button";
 import type { Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
+import { useSession } from "@/lib/auth-client";
 import { LanguageSwitcher } from "./language-switcher";
 import { TabNavigation } from "./tab-navigation";
 

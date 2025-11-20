@@ -1,13 +1,12 @@
 "use server";
 
-import { genSaltSync, hashSync } from "bcrypt-ts";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
-import { users } from "@/db/schema/users";
+import { user } from "@/db/schema/auth";
 
-export async function getUser(email: string) {
-  return await db.query.users.findFirst({
-    where: eq(users.email, email),
+export async function getUserByEmail(email: string) {
+  return await db.query.user.findFirst({
+    where: eq(user.email, email),
     with: {
       tenant: true,
       role: true,
@@ -15,9 +14,9 @@ export async function getUser(email: string) {
   });
 }
 
-export async function getUserById(id: number) {
-  return await db.query.users.findFirst({
-    where: eq(users.id, id),
+export async function getUserById(id: string) {
+  return await db.query.user.findFirst({
+    where: eq(user.id, id),
     with: {
       tenant: true,
       role: true,
@@ -25,47 +24,25 @@ export async function getUserById(id: number) {
   });
 }
 
-export async function createUser(data: {
-  email: string;
-  password: string;
-  tenantId: number;
-  roleId: number;
-  name?: string;
-  customPermissions?: string[];
-}) {
-  const salt = genSaltSync(10);
-  const hash = hashSync(data.password, salt);
-
-  const [user] = await db
-    .insert(users)
-    .values({
-      email: data.email,
-      password: hash,
-      tenantId: data.tenantId,
-      roleId: data.roleId,
-      name: data.name,
-      customPermissions: data.customPermissions || [],
-    })
-    .returning();
-
-  return user;
-}
+// Note: User creation is now handled by Better Auth
+// Use auth.api.signUpEmail() to create users
+// Then update with tenant/role info using auth.api.updateUser()
 
 export async function updateUserPermissions(
-  userId: number,
+  userId: string,
   customPermissions: string[],
 ) {
   try {
-    const [user] = await db
-      .update(users)
+    const [updatedUser] = await db
+      .update(user)
       .set({
-        customPermissions,
+        customPermissions: JSON.stringify(customPermissions),
         updatedAt: new Date(),
       })
-      .where(eq(users.id, userId))
+      .where(eq(user.id, userId))
       .returning();
 
-    return { success: true, user };
+    return { success: true, user: updatedUser };
   } catch (error) {
     console.error("Error updating user permissions:", error);
     return { success: false, error: "Failed to update user permissions" };
@@ -74,12 +51,12 @@ export async function updateUserPermissions(
 
 export async function getUsersByTenant(tenantId: number) {
   try {
-    const tenantUsers = await db.query.users.findMany({
-      where: eq(users.tenantId, tenantId),
+    const tenantUsers = await db.query.user.findMany({
+      where: eq(user.tenantId, tenantId),
       with: {
         role: true,
       },
-      orderBy: (users, { desc }) => [desc(users.createdAt)],
+      orderBy: (user, { desc }) => [desc(user.createdAt)],
     });
 
     return { success: true, users: tenantUsers };
@@ -89,27 +66,27 @@ export async function getUsersByTenant(tenantId: number) {
   }
 }
 
-export async function updateUserRole(userId: number, roleId: number) {
+export async function updateUserRole(userId: string, roleId: number) {
   try {
-    const [user] = await db
-      .update(users)
+    const [updatedUser] = await db
+      .update(user)
       .set({
         roleId,
         updatedAt: new Date(),
       })
-      .where(eq(users.id, userId))
+      .where(eq(user.id, userId))
       .returning();
 
-    return { success: true, user };
+    return { success: true, user: updatedUser };
   } catch (error) {
     console.error("Error updating user role:", error);
     return { success: false, error: "Failed to update user role" };
   }
 }
 
-export async function deleteUser(userId: number) {
+export async function deleteUser(userId: string) {
   try {
-    await db.delete(users).where(eq(users.id, userId));
+    await db.delete(user).where(eq(user.id, userId));
 
     return { success: true };
   } catch (error) {

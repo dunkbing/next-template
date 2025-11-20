@@ -41,12 +41,16 @@ export function EditUserDialog({
   const { roles } = useRoles();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [selectedRoleId, setSelectedRoleId] = useState(user.roleId.toString());
+  const [selectedRoleId, setSelectedRoleId] = useState(
+    user.roleId?.toString() || "",
+  );
   const [availablePermissions, setAvailablePermissions] = useState<string[]>(
     [],
   );
   const [customPermissions, setCustomPermissions] = useState<string[]>(
-    user.customPermissions || [],
+    typeof user.customPermissions === "string"
+      ? JSON.parse(user.customPermissions)
+      : user.customPermissions || [],
   );
 
   // Load available permissions

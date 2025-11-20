@@ -46,7 +46,7 @@ export function UsersTable({ users, dict }: UsersTableProps) {
   const router = useRouter();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const selectedUser = users.find((u) => u.id === selectedUserId);
@@ -67,12 +67,12 @@ export function UsersTable({ users, dict }: UsersTableProps) {
     setIsDeleting(false);
   };
 
-  const openDeleteDialog = (userId: number) => {
+  const openDeleteDialog = (userId: string) => {
     setSelectedUserId(userId);
     setDeleteDialogOpen(true);
   };
 
-  const openEditDialog = (userId: number) => {
+  const openEditDialog = (userId: string) => {
     setSelectedUserId(userId);
     setEditDialogOpen(true);
   };

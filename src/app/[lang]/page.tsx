@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { auth } from "@/lib/auth";
@@ -11,7 +12,11 @@ export default async function Home({
 }) {
   const { lang } = await params;
   const dict = await getDictionary(lang as Locale);
-  const session = await auth();
+
+  // Get session using Better Auth
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
   return (
     <div className="flex min-h-screen items-center justify-center p-8">

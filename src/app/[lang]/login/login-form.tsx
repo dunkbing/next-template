@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
-import { loginUserSchema } from "@/db/schema/users";
+import { loginUserSchema } from "@/db/schema/auth";
 import { FieldError } from "@/components/ui/field";
 import { redirect } from "next/navigation";
 
@@ -139,7 +139,6 @@ export default function LoginForm({
             />
           </CardContent>
           <CardFooter className="flex flex-col space-y-4 mt-4">
-            submitting {String(isSubmitting)}
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               {form.state.isSubmitting ? (
                 <>

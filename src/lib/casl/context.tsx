@@ -1,7 +1,6 @@
 "use client";
 
 import { createContextualCan } from "@casl/react";
-import { useSession } from "next-auth/react";
 import { createContext, type ReactNode, useContext, useMemo } from "react";
 import type { SelectRole } from "@/db/schema";
 import { type AppAbility, defineAbilityFor } from "./ability";
@@ -23,16 +22,15 @@ export const Can = createContextualCan(AbilityContext.Consumer);
 export function AbilityProvider({
   children,
   roles = [],
+  permissions = [],
 }: {
   children: ReactNode;
   roles?: SelectRole[];
+  permissions?: string[];
 }) {
-  const { data: session } = useSession();
-
   const ability = useMemo(() => {
-    const permissions = session?.user?.permissions || [];
     return defineAbilityFor(permissions);
-  }, [session?.user?.permissions]);
+  }, [permissions]);
 
   const canEditUsers = useMemo(() => ability.can("update", "User"), [ability]);
 

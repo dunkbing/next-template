@@ -1,7 +1,7 @@
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import { getUsersByTenant } from "@/app/actions/users";
-import { CreateUserDialog } from "@/components/create-user-dialog";
+import { getUserById, getUsersByTenant } from "@/app/actions/users";
 import { PageLoader } from "@/components/page-loader";
 import {
   Card,
@@ -35,15 +35,42 @@ export default async function UsersPage({
 }) {
   const { lang } = await params;
   const dict = await getDictionary(lang as Locale);
-  const session = await auth();
-  const ability = defineAbilityFor(session?.user?.permissions || []);
+
+  // Get session using Better Auth
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.user) {
+    redirect(`/${lang}/login`);
+  }
+
+  // Get full user data with permissions
+  const userData = await getUserById(session.user.id);
+
+  if (!userData || !userData.tenantId || !userData.roleId) {
+    // User exists but doesn't have tenant/role assigned (incomplete registration)
+    redirect(`/${lang}/login`);
+  }
+
+  // Parse custom permissions from JSON string
+  const customPermissions = JSON.parse(
+    userData.customPermissions || "[]",
+  ) as string[];
+
+  // Merge role permissions with custom permissions
+  const allPermissions = [
+    ...(userData.role?.permissions || []),
+    ...customPermissions,
+  ];
+
+  const ability = defineAbilityFor(allPermissions);
 
   if (!ability.can("read", "User")) {
     redirect(`/${lang}/dashboard`);
   }
 
-  const tenantId = Number.parseInt(session?.user?.tenantId || "0");
-  const canCreateUser = ability.can("create", "User");
+  const tenantId = userData.tenantId;
 
   return (
     <div className="space-y-6">
@@ -52,13 +79,6 @@ export default async function UsersPage({
           <h1 className="text-3xl font-bold">{dict.users.title}</h1>
           <p className="text-muted-foreground">{dict.users.description}</p>
         </div>
-        {canCreateUser && (
-          <CreateUserDialog
-            tenantId={tenantId}
-            dict={dict}
-            lang={lang as Locale}
-          />
-        )}
       </div>
 
       <Card>
