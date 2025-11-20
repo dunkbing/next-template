@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Next.js 15 application with authentication using NextAuth v5, PostgreSQL database with Drizzle ORM, Hono for API routes, and shadcn/ui components. The project uses Biome for linting/formatting instead of ESLint/Prettier.
+This is a Next.js 15 application with authentication using Better Auth, PostgreSQL database with Drizzle ORM, Hono for API routes, and shadcn/ui components. The project uses Biome for linting/formatting instead of ESLint/Prettier.
 
 ## Development Commands
 
@@ -36,7 +36,9 @@ bunx drizzle-kit push
 
 Required environment variables (see `.env.example`):
 - `DATABASE_URL`: PostgreSQL connection string
-- `AUTH_SECRET`: NextAuth secret (generate with `openssl rand -base64 32`)
+- `BETTER_AUTH_SECRET`: Better Auth secret (generate with `openssl rand -base64 32`)
+- `BETTER_AUTH_URL`: Base URL for Better Auth (e.g., `http://localhost:3000`)
+- `NEXT_PUBLIC_APP_URL`: Public app URL for client-side auth (e.g., `http://localhost:3000`)
 
 ## Implemented Features
 
@@ -66,28 +68,39 @@ Required environment variables (see `.env.example`):
 - **Authorization**: Session includes user permissions for client and server-side checks
 
 ### User Management
-- **User Schema**: Users belong to tenants and have assigned roles (`src/db/schema/users.ts`)
-- **Custom Permissions**: Per-user permission overrides stored as JSON array
-- **User Operations**: Full CRUD via server actions (`src/app/actions/users.ts`)
-  - Create user with role and custom permissions
+- **User Schema**: Users belong to tenants and have assigned roles (`src/db/schema/auth.ts`)
+- **Custom Permissions**: Per-user permission overrides stored as JSON string
+- **User Operations**: CRUD via server actions (`src/app/actions/users.ts`)
+  - User creation handled by Better Auth's `signUpEmail` API
   - Update user role and permissions
   - Delete user
   - Fetch users by tenant
 - **User Relations**: Each user has tenant and role relationships
 
 ### Authentication System
-- **NextAuth v5 (beta)**: Credentials-based authentication with bcrypt password hashing
-- **Auth configuration split**: `src/auth.config.ts` (edge-compatible) and `src/auth.ts` (Node.js features)
-- **Protected routes**: Routes under `/dashboard` require authentication
-- **Session Enhancement**: Session includes tenant ID, role ID, role name, and merged permissions
+- **Better Auth**: Modern authentication library with email/password support
+- **Auth Configuration**:
+  - Server: `src/lib/auth.ts` - Better Auth instance with Drizzle adapter
+  - Client: `src/lib/auth-client.ts` - React hooks and client methods
+- **Protected Routes**: Routes under `/dashboard` require authentication with session checks
+- **Session Management**: Better Auth handles session cookies and tokens automatically
+- **Custom Fields**: User schema extended with `tenantId`, `roleId`, and `customPermissions`
 - **Server Actions**: `login` and `register` actions with loading states (`src/app/actions/auth.ts`)
-- **Password Hashing**: Uses `bcrypt-ts` (Edge runtime compatible)
+- **Password Hashing**: Better Auth handles password hashing securely
+- **API Routes**: Better Auth handler at `/api/auth/[...all]` for authentication endpoints
 
 ### Registration Flow
-- **Company Setup**: New registrations create tenant + admin role + user
+- **Transaction-Based**: Manual rollback ensures data consistency
+- **Company Setup**: New registrations create tenant + admin role + user atomically
+- **Flow**:
+  1. Create tenant
+  2. Create admin role with all permissions
+  3. Create user via Better Auth (handles password hashing)
+  4. Update user with tenant and role information
+- **Rollback**: If any step fails, all created resources are cleaned up (user, account, role, tenant)
 - **Default Admin Role**: Auto-created with all available permissions
 - **Validation**: Checks for existing users and duplicate tenant slugs
-- **Error Handling**: User-friendly error messages for registration failures
+- **Error Handling**: User-friendly error messages with automatic cleanup
 
 ### Internationalization (i18n)
 - **Supported Languages**: English (en), Vietnamese (vi), French (fr)
@@ -129,12 +142,13 @@ Required environment variables (see `.env.example`):
 ## Architecture
 
 ### Authentication Flow
-- User logs in via credentials provider
-- Password verified with bcrypt
-- User data fetched with role and tenant
-- Permissions merged (role + custom)
-- Session populated with user ID, tenant ID, role info, and permissions
-- Protected routes check authentication via middleware (`src/auth.config.ts:14`)
+- User logs in via Better Auth's `signInEmail` API
+- Password verified by Better Auth
+- Session created with user ID, email, and name
+- Protected pages fetch full user data (tenant, role, permissions)
+- Permissions merged (role permissions + custom permissions)
+- Protected routes check authentication using `auth.api.getSession()`
+- Session includes user ID but full permissions loaded on-demand for security
 
 ### Permission Flow
 1. User assigned to role with base permissions
@@ -145,27 +159,34 @@ Required environment variables (see `.env.example`):
 6. Pages/components check permissions using `ability.can(action, subject)`
 
 ### Database Layer
-- **ORM**: Drizzle ORM with PostgreSQL (using `node-postgres`)
+- **ORM**: Drizzle ORM with PostgreSQL (using `bun-sql`)
 - **Database client**: Located in `src/db/index.ts` with schema auto-loaded
 - **Schema location**: All schema files in `src/db/schema/`
+  - `auth.ts`: Better Auth tables (user, session, account, verification) with custom fields
   - `tenants.ts`: Multi-tenant organizations
   - `roles.ts`: Role definitions with permissions
-  - `users.ts`: Users with tenant and role relationships
+- **Better Auth Tables**:
+  - `user`: Core user table with custom fields (tenantId, roleId, customPermissions)
+  - `session`: Active sessions with tokens and expiration
+  - `account`: Stores passwords and OAuth tokens
+  - `verification`: Email verification and password reset tokens
 - **Configuration**: `drizzle.config.ts` points to `./drizzle` for migrations and `./src/db/schema` for schema files
 - **Relations**: Drizzle relations for tenant -> roles, tenant -> users, role -> users
 
 ### Project Structure
 - **Server Actions**: Located in `src/app/actions/`
-  - `auth.ts`: Login, register, sign out actions with i18n support
-  - `users.ts`: User CRUD operations
+  - `auth.ts`: Login, register, sign out actions with i18n support and rollback logic
+  - `users.ts`: User query operations (creation via Better Auth)
   - `roles.ts`: Role CRUD operations and permission helpers
   - `tenants.ts`: Tenant CRUD operations
 - **API Routes**:
-  - Hono API: `src/app/api/[[...route]]/route.ts` - Main API handler
-  - NextAuth: `src/app/api/auth/[...nextauth]/route.ts` - Auth handlers
+  - Hono API: `src/app/api/[[...route]]/route.ts` - Main API handler with health check
+  - Better Auth: `src/app/api/auth/[...all]/route.ts` - Auth handlers (GET, POST)
 - **Components**: UI components in `src/components/` with shadcn/ui components in `src/components/ui/`
 - **Configuration**: Centralized in `src/lib/configs.ts` for environment variables
-- **Auth Config**: Split between `src/auth.config.ts` (edge) and `src/auth.ts` (full)
+- **Auth Config**:
+  - Server: `src/lib/auth.ts` - Better Auth instance with Drizzle adapter and nextCookies plugin
+  - Client: `src/lib/auth-client.ts` - React client with useSession hook
 - **CASL**: Permission system in `src/lib/casl/ability.ts`
 - **i18n**: Configuration in `src/lib/i18n/config.ts`, dictionaries in `src/lib/i18n/dictionaries/`
 
@@ -192,7 +213,9 @@ TypeScript path alias `@/*` maps to `src/*` (configured in `tsconfig.json`)
 - Just push the db changes directly with `bunx drizzle-kit push`, no need to make migrations
 - All schemas export `Select*` and `Insert*` types for type inference
 - Use Drizzle relations for querying related data
-- Password hashing uses `bcrypt-ts` (Edge runtime compatible)
+- Password hashing is handled by Better Auth automatically
+- User IDs are strings (text) in Better Auth, not integers
+- Custom fields (tenantId, roleId) are nullable in DB but required after signup
 
 ### Form Handling
 - Use `useActionState` for form operations with loading states
@@ -222,6 +245,15 @@ TypeScript path alias `@/*` maps to `src/*` (configured in `tsconfig.json`)
 
 ### Next.js Specifics
 - Next.js 15 uses App Router exclusively (no Pages Router)
-- Protected routes configured in middleware via `src/auth.config.ts`
+- Protected routes check session using `auth.api.getSession({ headers: await headers() })`
 - Use `redirect()` for server-side redirects after mutations
-- Authenticated users accessing root (`/`) are redirected to `/dashboard`
+- Root path (`/`) redirects to default locale (`/en`)
+- Session management uses Better Auth's cookie-based system
+
+### Better Auth Specifics
+- Server-side session: Use `auth.api.getSession({ headers: await headers() })`
+- Client-side session: Use `useSession()` hook from `@/lib/auth-client`
+- Sign in: Use `auth.api.signInEmail({ body: { email, password } })`
+- Sign up: Use `auth.api.signUpEmail({ body: { email, password, name } })`
+- Sign out: Clear Better Auth session cookie and redirect
+- User updates: Direct database updates via Drizzle (Better Auth doesn't support custom field updates via API)

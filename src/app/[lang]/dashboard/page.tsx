@@ -9,6 +9,7 @@ import {
 import { auth } from "@/lib/auth";
 import type { Locale } from "@/lib/i18n/config";
 import { getDictionary, interpolate } from "@/lib/i18n/get-dictionary";
+import { UserProfile } from "@/components/user-profile";
 
 export default async function DashboardPage({
   params,
@@ -34,18 +35,22 @@ export default async function DashboardPage({
         </p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Getting Started</CardTitle>
-          <CardDescription>Start building your application</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            This is a Next.js 15 boilerplate with authentication, PostgreSQL
-            database with Drizzle ORM, and shadcn/ui components.
-          </p>
-        </CardContent>
-      </Card>
+      <div className="grid gap-6 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Getting Started</CardTitle>
+            <CardDescription>Start building your application</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              This is a Next.js 15 boilerplate with authentication, PostgreSQL
+              database with Drizzle ORM, and shadcn/ui components.
+            </p>
+          </CardContent>
+        </Card>
+
+        <UserProfile />
+      </div>
     </div>
   );
 }

@@ -102,7 +102,7 @@ docker-compose up
 ## Tech Stack
 
 - **Framework**: Next.js 15 with App Router
-- **Auth**: NextAuth v5
+- **Auth**: Better Auth
 - **Database**: PostgreSQL + Drizzle ORM
 - **API**: Hono
 - **UI**: shadcn/ui + Tailwind CSS v4
